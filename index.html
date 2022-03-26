@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FCC Technical Documentation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav id="navbar">
+      <header>No My Installation Time</header>
+      <a href="#Firewal" class="nav-link">Firewal</a>
+      <a href="#Installation_Snort" class="nav-link">Installation Snort</a>
+      <a href="#Installation_Snowl_Snort_GUI" class="nav-link">Installation Snowl-Snort GUI</a>
+      <a href="#Installation_Rkhunter" class="nav-link">Installation Rkhunter</a>
+      <a href="#Installation_Nagios" class="nav-link">Installation NaGIOS</a>
+      <a href="#Open_VPN_IPv4" class="nav-link">Open VPN IPv4</a>
+    </nav>
+    <main id="main-doc">
+      <section class="main-section" id="Firewal">
+        <header>What Is a Firewall?</header>
+        <p>
+          A firewall is a network security device that monitors incoming and outgoing network traffic and decides whether to allow or block specific traffic based on a defined set of security rules.
+          Firewalls have been a first line of defense in network security for over 25 years. They establish a barrier between secured and controlled internal networks that can be trusted and untrusted outside networks, such as the Internet. 
+          A firewall can be hardware, software, or both.
+        </p>
+      </section>
+
+      <section class="main-section" id="Installation_Snort">
+        <header>IDS and IPS</header>
+        <p>
+          What is Snort? Snort is the foremost Open Source Intrusion Prevention System (IPS) in the world. Snort IPS uses a series of rules that help define malicious network activity and uses those rules to find packets that match against
+          them and generates alerts for users. Snort can be deployed inline to stop these packets, as well. Snort has three primary uses: As a packet sniffer like tcpdump, as a packet logger — which is useful for network traffic debugging,
+          or it can be used as a full-blown network intrusion prevention system. Snort can be downloaded and configured for personal and business use alike.
+        </p>
+
+        <p>
+          What are my options for buying and using Snort? Once downloaded and configured, Snort rules are distributed in two sets: The “Community Ruleset” and the “Snort Subscriber Ruleset.” The Snort Subscriber Ruleset is developed,
+          tested, and approved by Cisco Talos. Subscribers to the Snort Subscriber Ruleset will receive the ruleset in real-time as they are released to Cisco customers. You can download the rules and deploy them in your network through the
+          Snort.org website. The Community Ruleset is developed by the Snort community and QAed by Cisco Talos. It is freely available to all users.
+        </p>
+
+        <p>For more information about Snort Subscriber Rulesets available for purchase, please visit the Snort product page.</p>
+        <header>Install Snort</header>
+        <p>Find the appropriate package for your operating system and install.</p>
+        <code>
+          <pre>
+  Siapkan Aplikasi Pendukung
+
+      sudo locale-gen id_ID.UTF-8
+      sudo apt-get update
+
+  ifconfig dulu cek interface dan IP nya, Lalu Install
+      root@server-IDS-IPS:~# apt-get install oinkmaster snort snort-common snort-rules-default snort-doc
+
+  Akan Di Tanya
+      interface yang akan di monitor, misalnya: enp0s3
+      range IP yang di monitor, misalnya: 192.168.100.0/24
+
+  Cek Snort
+      snort -C
+
+  Jalankan Snort mode NIDS
+      snort -dev -l /var/log/snort/ -h 192.168.0.0/24 -c /etc/snort/snort.conf &
+
+  kalau ingin supaya bisa di baca di kemudian hari oleh wireshark harus di simpan dalam bentuk binary, dengan perintah
+      /usr/sbin/snort -m 027 -b -l /var/log/snort/ -u arif -c /etc/snort/snort.conf -S HOME_NET=[192.168.100.0/24] -i wlp2s0 &
+      
+  Supaya tidak rewel, sebaiknya permission /var/log/snort di jadikan
+      chmod 770 /var/log/snort
+  ini sebetulnya cara yang tidak baik!!! PAKE YANG BAWAH AJA BUAT JALANKAN SNORT NYA
+      
+  Menjalankan Snort mode NIDS, log text
+  Agar log /var/log/snort bisa di baca oleh manusia, kita bisa menjalankan snort dengan perintah,
+      root@serveryoai:~# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D
+      
+  Cek Snort
+      root@server:/home/arif# ps ax | grep snort
+  
+  Kalo Kill Snort
+      root@server:/var/log/snort# killall snort
+      root@server:/var/log/snort# ps ax | grep snort
+      7444 pts/0    S+     0:00 grep --color=auto snort
+
+  CEK
+      root@server:/etc/snort# vi snort.conf
+      root@server:/etc/snort# vi classification.config
+
+  KALO 1 ARTI NYA WARNA MERAH BAGUS KALO 2 ARTI NYA KUNING KALO 3 ARTINYA IJO
+  config classification: trojan-activity,A Network Trojan was detected, 1
+
+      root@server:/etc/snort# cd rules/
+      root@server:/etc/snort/rules# more community-oracle.rules
+  
+  Yang Penting Kata-Kata content:
+  Menjalankan Snort mode NIDS, log text
+  Agar log /var/log/snort bisa di baca oleh manusia, kita bisa menjalankan snort dengan perintah,
+      root@server:/var/log/snort# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D
+
+      root@server:/var/log/snort# watch -n 3 tail /var/log/snort/alert
+
+  Kalo Kita Scan Nmap AKAN keluar
+      nmap -v -sS -O 192.168.100.21
+      [**] [1:1228:7] SCAN nmap XMAS [**]
+      [Classification: Attempted Information Leak] [Priority: 2]
+      09/25-17:36:04.058342 192.168.100.122:63434 -> 192.168.100.21:1
+      TCP TTL:55 TOS:0x0 ID:16877 IpLen:20 DgmLen:60
+
+  Kalo Untuk Buat Snort Rules Harus Ngerti Regex
+      
+  Kalo Mau Nyadap Paket Yang Lewat Dan Kita Kasih REGEX Supaya Kita Extrak Ini Mahkluk Apa Si Kira-Kira Ke Gitu
+  Nyadap Seperti Kayak WIRESHARK Kalo Ini Nyadap Versi CLI TCPDUMP
+      root@server:/var/log/snort# snort -C
+      
+  Membuat Rules Sederhana
+      root@server:/var/log/snort# cd /etc/snort/rules/
+      root@server:/etc/snort/rules# vi local.rules
+      
+  Tuliskan Dan Save
+      alert tcp any any -> 192.168.100.21 22 (msg: "Ada Yang Connect SSH Ke Mesin!!"; sid:1000001;)
+
+  Kill Dulu
+      root@server:/etc/snort/rules# killall snort
+
+  Kita rm -Rf dulu biar bersih
+      root@server:/etc/snort/rules# cd /var/log/snort/
+      root@server:/var/log/snort# rm -Rf *
+
+  Jalan Kan Lagi
+      root@server:/etc/snort/rules# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D
+
+  Cek Pake Ps Ax (Liat Software Jalan Di Belakang Layar)
+      root@server:/etc/snort/rules# ps ax
+
+      root@server:/var/log/snort# watch -n 3 tail /var/log/snort/alert
+
+  Kita Coba SSH Ke Server
+
+  Akan Keluar
+      [**] [1:1000001:0] Ada Yang Connect SSH Ke Mesin!! [**]
+      [Priority: 0]
+      09/25-18:32:00.622198 192.168.100.79:51814 -> 192.168.100.21:3000
+
+  Bisa Cek Ke
+      root@server:/var/log/snort# vi alert
+            </pre
+          >
+        </code>
+      </section>
+
+      <section class="main-section" id="Installation_Snowl_Snort_GUI">
+        <header>Snowl - Snort Gui</header>
+        <p>
+          What is Snowl? Snowl is a modern web-based GUI (graphical user interface) for snort. Snort is an open source IDS/IPS (intrusion detection/prevention system). It is command-line tool and has not own graphical interface. Therefore,
+          we decided to create Snowl so that the snort setting became automatic and understandable, and the analysis of threats was as convenient as possible.
+        </p>
+        <header>Instalation</header>
+        <p>Please choose your operating system to view the installation guide i use ubuntu.</p>
+        <code>
+          <pre>
+    Biasa Nya Saya Simpan Hasil Download Nya Disini
+            root@server-IDS-IPS:/var/log/snort# cd /usr/local/src/
+            root@server-IDS-IPS:/usr/local/src# wget https://snowl.io/download/snowl-install-ubuntu.sh
+            root@server-IDS-IPS:/usr/local/src# ls
+            snowl-install-ubuntu.sh
+            root@server-IDS-IPS:/usr/local/src# chmod 755 snowl-install-ubuntu.sh
+            root@server-IDS-IPS:/usr/local/src# ./snowl-install-ubuntu.sh
+
+    KETIK yes
+            Install Snowl? (yes/no, default yes): yes
+    AKAN DI TANYA LAGI KETIK yes
+            CEK DI WEB BROWSER
+            192.168.100.216:5500
+    LOGIN USERNAME & PASSWORD NYA
+            admin
+            123456
+    UBAH PASSWORD NYA BIAR AMAN !!!
+
+    CEK SNOWL
+            root@server-IDS-IPS:/usr/local/src# ps -ef | grep snowl
+            root@server-IDS-IPS:/usr/local/src# netstat -ntpl | grep 5500
+
+    CARA MENAMBAHKAN RULE
+    INI TERGANTUNG SERVER NYA, SERVER NYA ADA APLIKASI APA SAJA
+    AGA BERAT INI TERGANTUNG SPEK SERVER NYA
+    1. BUKA DI BROWSER 192.168.100.216:5500
+    2. PILIH THREAT POLICIES
+    3. Add new policy
+    4. UNTUK Rule urls KLIK DI BAWAHNYA ADA Examples; ADA 2 Rules, COPY SAJA YANG SATU ADA oinkcode= HARUS LOGIN DULU DI WEBSITE SNORT NYA UNTUK MELIHAT ID NYA
+    INI BISA PAKE BAWAAN Snort ATAU DOWNLOAD Rules Snort DI SINI https://www.snort.org/downloads PAKE YANG Rules Community KARENA GRATIS, SAMA SAJA SEPERTI BAWAAN NYA
+    SEBELUM DOWNLOAD RULE NYA, CEK VERSION SNORT NYA DULU CARA NYA KALO VERSION NYA 2.9.16 PAKE RULE NYA V2.9 KALO VERISON NYA 3.0 PAKE V3.0
+            root@server-IDS-IPS:/var/log/snort# snort --version
+
+    COPY SAJA DIBAGIAN Snort v2.9
+    KETIKAN SEPERTI DI BAWAH
+    Name              : PolicySatu
+    Description       : Policy Satu untuk keamanan VLAN intarnet
+    Rule urls         : https://www.snort.org/downloads/community/community-rules.tar.gz
+                        https://rules.emergingthreats.net/open-nogpl/snort-2.9.0/emerging.rules.tar.gz
+    IP blacklist urls : https://talosintelligence.com/documents/ip-blacklist
+    SAVE
+    ITU SAJA YANG DI TAMBAHKAN PILIH (SAVE)
+
+    SNOWL INSTALLATION
+    Server web diperlukan untuk pengoperasian Snowl. Itu bisa Apache atau Nginx.
+    Pilih dan instal salah satunya, misalnya Apache.
+
+    PILIH SALAH SATU PENGEN PAKE APA apache2 ATAU PAKE nginx
+    Apache installation
+            root@server-IDS-IPS:/home/arif#sudo apt install apache2
+
+    Nginx installation
+            root@server-IDS-IPS:/home/arif#sudo apt install nginx
+
+    Jalankan perintah berikut untuk menginstal Snowl:
+            wget https://snowl.io/download/snowl_1.7.2_amd64.deb && dpkg -i ./snowl_1.7.2_amd64.deb
+
+    Konfigurasikan server web untuk bekerja dengan Snowl. Untuk tujuan ini, lakukan hal berikut:
+            /opt/snowl/snowl-configure-httpd
+
+    UNTUK MENGHAPUS SNOWL CEK DULU
+            root@server-IDS-IPS:/home/arif# dpkg -l | grep snowl
+            ii  snowl-sensor                         1.7.2                             amd64        Intrusion Detection System SNOWL
+
+    STOP DULU
+            root@server-IDS-IPS:/home/arif# service snowl-sensor stop
+            root@server-IDS-IPS:/home/arif# service snowl stop
+
+    HAPUS SNOWL
+            root@server-IDS-IPS:/home/arif# dpkg -r snowl
+            root@server-IDS-IPS:/home/arif# dpkg -r snowl-sensor
+            
+    CEK
+            root@server-IDS-IPS:/home/arif# dpkg -l | grep snort
+            
+    STOP DULU
+            root@server-IDS-IPS:/home/arif# service snowl stop
+            
+    MENGHAPUS SNORT
+            root@server-IDS-IPS:/home/arif# apt-get remove snort*
+            root@server-IDS-IPS:/home/arif# apt-get remove --purge snort*
+            </pre
+          >
+        </code>
+      </section>
+
+      <section class="main-sections" id="Installation_Rkhunter">
+        <header>Rkhunter</header>
+        <p>One potential concern is rootkits. Rootkits are software secretly installed by malicious intruders that allow those users to resume access to servers after security is breached. This is a very dangerous problem, because even after the vector entry that the user originally used to gain permanent access, they can continue to log into the server using the rootkit they installed.
+          One tool that can help you protect your system from problems like this is rkhunter. This software checks your system against a database of known rootkits. Also, it can check other system files to make sure they match the expected properties and values.</p>
+        <header>Installation</header>
+        <p>
+          Please choose your operating system to view the installation guide i use ubuntu.
+          <code>
+        </p>
+          <pre>
+      Compile RKHunter
+      INSTALL APLIKASI PENDUKUNG
+            root@server-IDS-IPS:/usr/local/src# sudo locale-gen id_ID.UTF-8
+            root@server-IDS-IPS:/usr/local/src# sudo apt-get update
+            root@server-IDS-IPS:/usr/local/src# sudo apt-get -y install binutils libreadline5 libruby ruby ssl-cert unhide.rb mailutils
+      MASUKAN 
+            - Site localhost
+            - Relay Site kalau pakai INDIHOME : smtp.telkom.net
+
+      CEK VERSI TERAKHIR
+
+            cd /usr/local/src/
+
+            root@server-IDS-IPS:/usr/local/src# wget http://downloads.sourceforge.net/project/rkhunter/rkhunter/1.4.6/rkhunter-1.4.6.tar.gz
+            root@server-IDS-IPS:/usr/local/src# tar xzvf rkhunter-1.4.6.tar.gz*
+            root@server-IDS-IPS:/usr/local/src# cd rkhunter-1.4.6*
+
+      INSTALL DI /usr
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# ./installer.sh --layout /usr --install
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --versioncheck
+
+      OUTPUT
+            [ Rootkit Hunter version 1.4.6 ]
+            Checking rkhunter version...
+            This version  : 1.4.6
+            Latest version: 1.4.6
+
+      UPDATE DATA FILE
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --update
+
+      Set properties update / baseline 
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --propupd
+      OUTPUT
+            [ Rootkit Hunter version 1.4.6 ]
+            File created: searched for 180 files, found 139
+
+      RUN JALANKAN
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none
+      Dia akan menjalan test per section.
+      Log bisa di baca di  
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# nano /var/log/rkhunter.log
+
+      ATAU PAKE INI
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# cat /var/log/rkhunter.log | grep warning
+            [21:18:08] Info: No mail-on-warning address configured
+
+      Alternative lain, perintahkan rkhunter untuk print warning ke layar 
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none --rwo
+
+      Tuning Konfigurasi RKHunter supaya lebih baik
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# vi /etc/rkhunter.conf
+
+      Notifikasi email
+
+            MAIL-ON-WARNING="your_user@domain.com"
+            MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
+
+      Atau
+            MAIL-ON-WARNING="root@localhost"
+            MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
+
+      IJINKAN ROOT SSH LOGIN, CONTOH
+      root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# ALLOW_SSH_ROOT_USER=without-password
+
+      CEK
+            root@server-yoai:/usr/local/src/rkhunter-1.4.6# rkhunter -C
+      TEST LAGI APAKAH ADA WARNING
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none --rwo
+
+      Harusnya ada minimsal 1 warning, karena konfigurasi rkhunter sudah di ubah, 
+
+      Update profile rkhunter 
+            root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --propupd
+      Cek email untuk notifkasi dari rkhunter
+
+      Cron
+            root@server-yoai:/usr/local/src/rkhunter-1.4.6# crontab -e
+      KALAU TIDAK ADA MASALAH, MAKA TIDAK ADA EMAIL YANG AKAN DIKIRIM
+        </pre>
+        </code>
+      </section>
+        
+      <section class="main-section" id="Installation_Nagios">
+        <header>NaGIOS</header>
+        <p>
+          Nagios is a popular open-source monitoring system. Nagios maintains an inventory of your servers and monitors them so you know your critical services are up and running. Using a monitoring system like Nagios is an essential tool for any production environment, because by monitoring uptime, CPU usage, or disk space, you can prevent problems before they occur, or before your users contact you.
+
+          Here we will install Nagios 4 and configure it so that we can monitor host resources on the Nagios web interface. We will also setup the Nagios Remote Plugin Executor (NRPE), which will run as the remote host agent so that we can monitor its resources.
+
+            <header>Need</header>
+            <ul>
+              <li>Two Ubuntu 20.04 servers with root user privige. Firewall with ufw.</li>
+              <li>Servers with Nagios will be called Nagios servers.</li>
+              <li>Servers without Nagios will be called Ubuntu servers.</li>
+              <li>Nagios Server will run Apache and PHP.</li>
+              <li>Nagios Server is usually run behind a Firewall or VPN. If you run it on a Public IP, you have to be more serious about installing TLS/SSL etc. This tutorial assumes, Nagios server is behind Firewall.</li>
+            </ul>  
+        <header>Installation</header>
+        <p>UBUNTU 20.04 NaGIOS installation.</p>
+          <code>
+
+            <pre>
+      BIASA NYA SAYA SEBELUM INSTALL UBAH NAMA SERVER DULU 
+            root@server-yoai:/home/arif# vim /etc/hostname
+            server-nagios
+      RESTART BIAR NAMA NYA KE GANTI server-nagios
+            
+      Langkah 1 - Instal Ketergantungan Paket
+      Pertama, kami akan memperbarui repositori Ubuntu dan menginstal beberapa dependensi paket untuk instalasi Nagios.
+      Perbarui repositori Ubuntu menggunakan perintah apt di bawah ini.
+            root@server-nagios:/home/arif# sudo apt update
+            
+      Setelah itu, instal dependensi paket untuk instalasi Nagios.
+            root@server-nagios:/home/arif# sudo apt install -y autoconf bc gawk dc build-essential gcc libc6 make wget unzip apache2 php libapache2-mod-php libgd-dev libmcrypt-dev 
+            make libssl-dev snmp libnet-snmp-perl gettext     
+            
+      Langkah 2 - Instal Nagios Core 4.4.6
+            arif@server-nagios:~$ cd /usr/local/src/
+            root@server-nagios:/usr/local/src# wget https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.6.tar.gz
+            root@server-nagios:/usr/local/src# ls
+            nagios-4.4.6.tar.gz
+
+      Ekstrak paket Nagios dan buka direktori Nagios yang diekstraksi.
+            root@server-nagios:/usr/local/src# tar -xf nagios-4.4.6.tar.gz
+            root@server-nagios:/usr/local/src# cd nagioscore-nagios-*/
+
+      Kompilasi dan Instal Nagios
+      Pertama, kompilasi kode sumber Nagios dan tentukan konfigurasi host virtual Apache untuk Nagios.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo ./configure --with-httpd-conf=/etc/apache2/sites-enabled
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make all
+
+      Buat pengguna dan grup Nagios, dan tambahkan pengguna Apache 'www-data' ke grup 'nagios'.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-groups-users
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo usermod -a -G nagios www-data
+
+      Instal binari Nagios, skrip daemon layanan, dan mode perintah.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-daemoninit
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-commandmode
+
+      Setelah itu, instal contoh konfigurasi skrip.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-config
+
+      Kemudian instal konfigurasi Apache untuk Nagios dan aktifkan modul mod_rewrite dan mode_cgi.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-webconf
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo a2enmod rewrite cgi
+
+      Sekarang restart layanan Apache.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# systemctl restart apache2
+      Dan Anda telah menginstal Nagios Core 4.4.6.
+
+      Create nagiosadmin user
+      Setelah menginstal Nagios Core, kami akan menambahkan otentikasi dasar untuk mengakses dasbor Nagios. Dan kita akan menggunakan otentikasi Apache dasar.
+      Buat otentikasi dasar Apache baru untuk pengguna "nagiosadmin".
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+      Ketikkan kata sandi Anda yang kuat.
+
+      Setup UFW Firewall
+      Untuk konfigurasi firewall, Anda perlu menambahkan layanan Apache dan port server Nagios ke firewall UFW.
+      Tambahkan port SSH dan Apache HTTP menggunakan perintah ufw di bawah ini.
+            for svc in Apache ssh
+            do
+            ufw allow $svc
+            done
+
+      Selanjutnya, mulai layanan firewall UFW dan tambahkan ke boot sistem.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# ufw enable
+
+      Ketik 'y' dan layanan firewall UFW akan diaktifkan.
+      Sekarang periksa semua aturan yang tersedia menggunakan perintah di bawah ini.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# ufw status numbered
+
+      Sekarang Anda akan mendapatkan layanan SSH dan Apache yang ditambahkan ke firewall UFW.
+      Dan akhirnya, Anda telah menyelesaikan instalasi Nagios Core di server Ubuntu 20.04.
+            
+      Langkah 3 - Instal Plugin Nagios dan Plugin NRPE
+      Baik plugin Nagios dan NRPE tersedia secara default di repositori Ubuntu. Anda dapat menginstal paket-paket tersebut menggunakan perintah apt di bawah ini.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo apt install monitoring-plugins nagios-nrpe-plugin
+            
+      Setelah instalasi selesai, buka direktori instalasi nagios "/usr/local/nagios/etc" dan buat direktori baru untuk menyimpan semua konfigurasi host server.
+            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# cd /usr/local/nagios/etc/
+            root@server-nagios:/usr/local/nagios/etc# mkdir -p /usr/local/nagios/etc/servers
+            
+      Selanjutnya, edit konfigurasi Nagios 'nagios.cfg' menggunakan editor vim.
+            root@server-nagios:/usr/local/nagios/etc# vim nagios.cfg
+            
+      Batalkan komentar pada opsi 'cfg dir' yang akan digunakan untuk menyimpan semua konfigurasi server hots.
+      BUANG PAGER NYA #
+            cfg_dir=/usr/local/nagios/etc/servers
+
+      Save and close.
+
+      Selanjutnya edit file konfigurasi "resource.cfg" dan tentukan path file binary dari Nagios Monitoring Plugins.
+            root@server-nagios:/usr/local/nagios/etc# vim resource.cfg
+
+      Tentukan jalur Plugin Pemantauan Nagios dengan mengubah konfigurasi default seperti di bawah ini.
+            $USER1$=/usr/local/nagios/libexec
+            $USER1$=/usr/lib/nagios/plugins
+
+      Save and close.
+
+      Simpan dan tutup, dan konfigurasi Nagioscore telah selesai.
+      Selanjutnya, mulai layanan Nagios dan tambahkan ke boot sistem.
+            root@server-nagios:/usr/local/nagios/etc# systemctl start nagios
+            root@server-nagios:/usr/local/nagios/etc# systemctl enable nagios
+            root@server-nagios:/usr/local/nagios/etc# systemctl status nagios
+
+      Akibatnya, layanan Nagios aktif dan berjalan. Sekarang kita perlu me-restart layanan Apache untuk menerapkan konfigurasi Nagios baru.
+            root@server-nagios:/usr/local/nagios/etc# systemctl restart apache2
+
+      Dan konfigurasi Nagios telah selesai.
+      Buka browser web Anda dan ketik alamat IP server mengikuti jalur URL "nagios".
+            http://192.168.100.43/nagios
+      Masuk dengan pengguna "nagiosadmin" dan ketik kata sandi Anda.
+      Hasilnya, Anda telah menginstal Nagios di server Ubuntu 20.04. Dan Anda dapat menambahkan host ke server Nagios.
+
+      Langkah 5 - Tambahkan Host Linux ke Monitor
+      Pada langkah ini, kita akan menambahkan server Ubuntu dengan nama host "client01" dan alamat IP "192.168.100.212" ke server Nagios.
+      - Instal Server NRPE di Server Client01
+      Masuk ke server "client01" menggunakan ssh Anda.
+            arif@Testing:~$ ssh arif@192.168.100.212
+
+      Setelah Anda masuk, perbarui repositori Ubuntu dan instal Plugin Nagios dan NRPE Server.
+            arif@server-wordpress:~$ sudo apt update
+            arif@server-wordpress:~$ sudo apt install nagios-nrpe-server monitoring-plugins
+
+      Selanjutnya, masuk ke direktori instalasi NRPE "/etc/nagios" dan edit file konfigurasi "nrpe.cfg".
+            arif@server-wordpress:~$ cd /etc/nagios
+            arif@server-wordpress:/etc/nagios$ vim nrpe.cfg
+
+      Batalkan komentar pada baris "server_address" dan ubah nilainya dengan alamat IP "client01".
+            server_address=192.168.100.212
+
+      Satu baris "allowed_hosts", tambahkan alamat IP Server Nagios "192.168.100.43".
+      IP 192.168.100.43 PUNYA server-nagios
+            allowed_hosts=127.0.0.1,::1,192.168.100.43
+      Save and close.
+
+      Selanjutnya, edit konfigurasi "nrpe_local.cfg".
+            arif@server-wordpress:/etc/nagios$ vim nrpe_local.cfg
+
+      Ubah alamat IP dengan alamat IP "client01", dan rekatkan konfigurasi ke dalamnya.
+            command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
+            command[check_ping]=/usr/lib/nagios/plugins/check_ping -H 192.168.100.212 -w 100.0,20% -c 500.0,60% -p 5
+            command[check_ssh]=/usr/lib/nagios/plugins/check_ssh -4 192.168.100.212
+            command[check_http]=/usr/lib/nagios/plugins/check_http -I 192.168.100.212
+            command[check_apt]=/usr/lib/nagios/plugins/check_apt
+
+      save dan close
+
+      Sekarang restart layanan NRPE dan tambahkan ke boot sistem.
+            arif@server-wordpress:/etc/nagios$ sudo systemctl restart nagios-nrpe-server.service
+            arif@server-wordpress:/etc/nagios$ sudo systemctl enable nagios-nrpe-server.service
+
+      Periksa layanan NRPE menggunakan perintah berikut.
+            arif@server-wordpress:/etc/nagios$ systemctl status nagios-nrpe-server.service
+
+      Selanjutnya, kembali ke Server Nagios dan periksa server NRPE "client01".
+      PASTIKAN Dan anda akan mendapatkan hasil seperti dibawah ini.        
+            root@server-nagios:/usr/local/nagios/etc# /usr/lib/nagios/plugins/check_nrpe -H 192.168.100.212
+            NRPE v4.0.0
+            root@server-nagios:/usr/local/nagios/etc# /usr/lib/nagios/plugins/check_nrpe -H 192.168.100.212 -c check_ping
+            PING OK - Packet loss = 0%, RTA = 0.09 ms|rta=0.089000ms;100.000000;500.000000;0.000000 pl=0%;20;60;0
+
+      Tambahkan Konfigurasi Host ke Server Nagios
+      Kembali ke terminal server Nagios, masuk ke direktori "/usr/local/nagios/etc" dan buat konfigurasi baru "server/client01.cfg".
+            root@server-nagios:/usr/local/nagios/etc# cd /usr/local/nagios/etc/
+            root@server-nagios:/usr/local/nagios/etc# vim servers/client01.cfg
+
+      Ubah alamat IP dan nama host dengan milik Anda dan rekatkan konfigurasi ke dalamnya.
+      Ubuntu Host configuration file1
+
+            define host {
+                    use                          linux-server
+                    host_name                    client01
+                    alias                        Ubuntu Host
+                    address                      192.168.100.212
+                    register                     1
+            }
+
+            define service {
+                  host_name                       client01
+                  service_description             PING
+                  check_command                   check_nrpe!check_ping
+                  max_check_attempts              2
+                  check_interval                  2
+                  retry_interval                  2
+                  check_period                    24x7
+                  check_freshness                 1
+                  contact_groups                  admins
+                  notification_interval           2
+                  notification_period             24x7
+                  notifications_enabled           1
+                  register                        1
+            }
+
+            define service {
+                  host_name                       client01
+                  service_description             Check Users
+                  check_command                   check_nrpe!check_users
+                  max_check_attempts              2
+                  check_interval                  2
+                  retry_interval                  2
+                  check_period                    24x7
+                  check_freshness                 1
+                  contact_groups                  admins
+                  notification_interval           2
+                  notification_period             24x7
+                  notifications_enabled           1
+                  register                        1
+            }
+
+            define service {
+                  host_name                       client01
+                  service_description             Check SSH
+                  check_command                   check_nrpe!check_ssh
+                  max_check_attempts              2
+                  check_interval                  2
+                  retry_interval                  2
+                  check_period                    24x7
+                  check_freshness                 1
+                  contact_groups                  admins
+                  notification_interval           2
+                  notification_period             24x7
+                  notifications_enabled           1
+                  register                        1
+            }
+        
+        define service {
+                  host_name                       client01
+                  service_description             Check Root / Disk
+                  check_command                   check_nrpe!check_root
+                  max_check_attempts              2
+                  check_interval                  2
+                  retry_interval                  2
+                  check_period                    24x7
+                  check_freshness                 1
+                  contact_groups                  admins
+                  notification_interval           2
+                  notification_period             24x7
+                  notifications_enabled           1
+                  register                        1
+        }
+        
+        define service {
+                  host_name                       client01
+                  service_description             Check APT Update
+                  check_command                   check_nrpe!check_apt
+                  max_check_attempts              2
+                  check_interval                  2
+                  retry_interval                  2
+                  check_period                    24x7
+                  check_freshness                 1
+                  contact_groups                  admins
+                  notification_interval           2
+                  notification_period             24x7
+                  notifications_enabled           1
+                  register                        1
+        }
+
+      save dan close
+      Sekarang restart Server Nagios.
+      KALO ERROR HAPUS CONFIGURE YANG DI ATAS   
+            </pre>
+        </code>
+      </section>
+
+      <section class="main-section" id="Open_VPN_IPv4">
+        <header>Open VPN IPv4</header>
+        <p>
+          OpenVPN is a virtual private network (VPN) system that implements techniques to create secure point-to-point or site-to-site connections in routed or bridged configurations and remote access facilities. It implements both client and server applications.</p>
+        <p>OpenVPN allows peers to authenticate each other using pre-shared secret keys, certificates or username/password. When used in a multiclient-server configuration, it allows the server to release an authentication certificate for every client, using signatures and certificate authority.
+        </p> 
+        <p>It uses the OpenSSL encryption library extensively, as well as the TLS protocol, and contains many security and control features. It uses a custom security protocol[11] that utilizes SSL/TLS for key exchange. It is capable of traversing network address translators (NATs) and firewalls.</p> 
+        <p>OpenVPN has been ported and embedded to several systems. For example, DD-WRT has the OpenVPN server function. SoftEther VPN, a multi-protocol VPN server, also has an implementation of OpenVPN protocol.</p>
+        <p>It was written by James Yonan and is free software, released under the terms of the GNU General Public License version 2 (GPLv2).[12] Additionally, commercial licenses are available.</p>
+ 
+        <header>Installation</header>
+        <p>OpenVPN Instalasi di Ubuntu 20.04.</p>
+          <code>
+
+            <pre>
+      INSTALL OPENVPN DI SERVER
+      YANG BAGUS BUAT VPN ITU PAKE (IPSEC DAN OPENVPN) JANGAN PAKE PPTP DAN I2TP KARENA PAKE USERNAME DAN
+      PASSWORD GA PAKE ENKRIPSI
+
+      Step 1 – Update system
+
+            root@server:/home/arif# sudo apt update
+            root@server:/home/arif# sudo apt upgrade
+
+      Step 2 – Cek IP address
+
+            root@server:/home/arif# ip a
+            root@server:/home/arif# ip link
+            root@server:/home/arif# ifconfig wlx1cbfce9982b7 172.16.100.12 netmask 255.255.255.0
+
+      Step 3 – Download & run openvpn-install.sh script
+
+      Pastikan tidak ada yang menggunakan repository ubuntu
+            root@server:/home/arifsudo rm -Rf /var/lib/dpkg/lock
+
+            root@server:/home/arif# chmod 644 /usr/local/src/
+            root@server:/home/arif# cd /usr/local/src/
+            root@server:/usr/local/src# wget https://git.io/vpn -O openvpn-install.sh
+            root@server:/usr/local/src# chmod +x openvpn-install.sh
+
+      Run      
+            root@server:/usr/local/src# sudo ./openvpn-install.sh
+
+      Welcome to this OpenVPN road warrior installer!
+
+            Which IPv4 address should be used?
+                  1) 192.168.100.21
+                  2) 172.16.100.12
+                  IPv4 address [1]: 1
+
+            This server is behind NAT. What is the public IPv4 address or hostname?
+            Public IPv4 address / hostname [180.254.68.214]: 192.168.100.21
+            Which protocol should OpenVPN use?
+                  1) UDP (recommended)
+                  2) TCP
+                  Protocol [1]: 1
+
+            What port should OpenVPN listen to?
+            Port [1194]: 2500
+
+            Select a DNS server for the clients:
+              1) Current system resolvers
+              2) Google
+              3) 1.1.1.1 # <- YANG INI JUGA OKE
+              4) OpenDNS
+              5) Quad9
+              6) AdGuard
+            DNS server [1]: 1
+            Enter a name for the first client:
+            Name [client]: yoai-testing
+            Press any key to continue...
+            ENTER
+
+      Check
+            root@server:/usr/local/src# cd /root/
+            root@server:~# mv yoai-testing.ovpn /home/arif/
+
+      COBA JGN GANTI USER KALO GA BISA PAKE DI BAWAH INI
+            root@server:~# chown arif: /home/arif/yoai-testing.ovpn # <- JGN PAKE INI
+
+      Step 4 – Connect an OpenVPN server using IOS/Android/Linux/Windows client
+      Copykan file sertifikat client.ovpn ke client, misalnya menggunakan perintah,
+            root@parrot:~# scp -P3000 arif@192.168.100.21:*ovpn .
+            root@parrot:~# sudo openvpn --config yoai-testing.ovpn
+
+      Linux Desktop: OpenVPN client configuration
+      Install
+      root@parrot:~# sudo apt -y install openvpn
+
+      RUN
+      KALO ngga PAKE INI BISA
+            root@parrot:~# sudo --client --config yoai-testing.ovpn
+
+      Step 5 - Verify/test the connectivity
+      Execute the following commands after connecting to OpenVPN server from your Linux desktop:
+            ping 10.8.0.1       # Ping to the OpenVPN server gateway
+            ip route            # Make sure routing setup working
+            dig TXT +short o-o.myaddr.l.google.com @ns1.google.com #Must return public IP address of OpenVPN server
+      Beberapa catatan troubleshooting OpenVPN & Client
+      Cek OpenVPN server for errors:            
+            journalctl --identifier ovpn-server
+
+      Cek Filewall Rules
+            cat /etc/rc.local
+            #!/bin/sh -e
+            iptables -t nat -A POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to 172.26.6.74
+            exit 0
+
+      Alternatif lain, run iptables command & sysctl command untuk verifikasi NAT rule setup
+            sudo iptables -t nat -L -n -v
+            sysctl net.ipv4.ip_forward
+            Insert rules ke /etc/rc.local (kalau belum di insert)
+            
+            sudo sh /etc/rc.local
+            sudo sysctl -w net.ipv4.ip_forward=1
+      Is OpenVPN server running and port is open? Use the ss command or netstat command and pidof command/ps command:
+            
+            $ netstat -tulpn | grep :1194 ## 1194 is the openvpn server port ##
+            $ ss -tulpn | grep :1194 ## 1194 is the openvpn server port ##
+            $ ps aux | grep openvpn ## is the openvpn server running? ##
+            $ ps -C openvpn ## is the openvpn server running? ##
+            $ pidof openvpn ## find the openvpn server PID ##
+      Verify that OpenVPN server runnign and Port is Open on ubuntu Linux If not running, restart the OpenVPN server:
+            
+            $ sudo systemctl restart openvpn@server
+            Look out for errors:
+            
+            $ sudo systemctl status openvpn@server
+      Can the Linux desktop client connect to the OpenVPN server machine? First you need to run a simple test to see if the OpenVPN server port (UDP 1194) accepts connections:
+            
+            $ nc -vu 104.20.187.5 1194
+      Connection to 104.20.187.5 1194 port [udp/openvpn] succeeded!
+
+            </pre>
+        </code>
+      </section>
+    </main>
+  </body>
+</html>
