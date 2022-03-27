@@ -458,276 +458,414 @@ MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"</pre
           <li>Nagios Server will run Apache and PHP.</li>
           <li>Nagios Server is usually run behind a Firewall or VPN. If you run it on a Public IP, you have to be more serious about installing TLS/SSL etc. This tutorial assumes, Nagios server is behind Firewall.</li>
         </ul>
-        <header>Installation</header>
-        <p>UBUNTU 20.04 NaGIOS installation.</p>
+        <header>Installation Nagios 4 dan Memantau Server di Ubuntu 20.04</header>
+        <p>Dua VPCS Ubuntu 20.04 satu untuk server Nagios dan satu untuk klien Nagios.</p>
+        <p>Akses ke akun pengguna root (atau akses ke akun admin dengan hak akses root.</p>
+        <p>Biasa Nya Saya Sebelum Install NaGIOS Ubah Nama Server Dulu Menjadi server-nagios lalu reboot server nya</p>
         <code>
           <pre>
-      BIASA NYA SAYA SEBELUM INSTALL UBAH NAMA SERVER DULU 
-            root@server-yoai:/home/arif# vim /etc/hostname
-            server-nagios
-      RESTART BIAR NAMA NYA KE GANTI server-nagios
-            
-      Langkah 1 - Instal Ketergantungan Paket
-      Pertama, kami akan memperbarui repositori Ubuntu dan menginstal beberapa dependensi paket untuk instalasi Nagios.
-      Perbarui repositori Ubuntu menggunakan perintah apt di bawah ini.
-            root@server-nagios:/home/arif# sudo apt update
-            
-      Setelah itu, instal dependensi paket untuk instalasi Nagios.
-            root@server-nagios:/home/arif# sudo apt install -y autoconf bc gawk dc build-essential gcc libc6 make wget unzip apache2 
-            php libapache2-mod-php libgd-dev libmcrypt-dev make libssl-dev snmp libnet-snmp-perl gettext     
-            
-      Langkah 2 - Instal Nagios Core 4.4.6
-            arif@server-nagios:~$ cd /usr/local/src/
-            root@server-nagios:/usr/local/src# wget https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.6.tar.gz
-            root@server-nagios:/usr/local/src# ls
-            nagios-4.4.6.tar.gz
-
-      Ekstrak paket Nagios dan buka direktori Nagios yang diekstraksi.
-            root@server-nagios:/usr/local/src# tar -xf nagios-4.4.6.tar.gz
-            root@server-nagios:/usr/local/src# cd nagioscore-nagios-*/
-
-      Kompilasi dan Instal Nagios
-      Pertama, kompilasi kode sumber Nagios dan tentukan konfigurasi host virtual Apache untuk Nagios.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo ./configure --with-httpd-conf=/etc/apache2/sites-enabled
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make all
-
-      Buat pengguna dan grup Nagios, dan tambahkan pengguna Apache 'www-data' ke grup 'nagios'.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-groups-users
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo usermod -a -G nagios www-data
-
-      Instal binari Nagios, skrip daemon layanan, dan mode perintah.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-daemoninit
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-commandmode
-
-      Setelah itu, instal contoh konfigurasi skrip.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-config
-
-      Kemudian instal konfigurasi Apache untuk Nagios dan aktifkan modul mod_rewrite dan mode_cgi.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo make install-webconf
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo a2enmod rewrite cgi
-
-      Sekarang restart layanan Apache.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# systemctl restart apache2
-      Dan Anda telah menginstal Nagios Core 4.4.6.
-
-      Create nagiosadmin user
-      Setelah menginstal Nagios Core, kami akan menambahkan otentikasi dasar untuk mengakses dasbor Nagios. Dan kita akan menggunakan otentikasi Apache dasar.
-      Buat otentikasi dasar Apache baru untuk pengguna "nagiosadmin".
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
-      Ketikkan kata sandi Anda yang kuat.
-
-      Setup UFW Firewall
-      Untuk konfigurasi firewall, Anda perlu menambahkan layanan Apache dan port server Nagios ke firewall UFW.
-      Tambahkan port SSH dan Apache HTTP menggunakan perintah ufw di bawah ini.
-            for svc in Apache ssh
-            do
-            ufw allow $svc
-            done
-
-      Selanjutnya, mulai layanan firewall UFW dan tambahkan ke boot sistem.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# ufw enable
-
-      Ketik 'y' dan layanan firewall UFW akan diaktifkan.
-      Sekarang periksa semua aturan yang tersedia menggunakan perintah di bawah ini.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# ufw status numbered
-
-      Sekarang Anda akan mendapatkan layanan SSH dan Apache yang ditambahkan ke firewall UFW.
-      Dan akhirnya, Anda telah menyelesaikan instalasi Nagios Core di server Ubuntu 20.04.
-            
-      Langkah 3 - Instal Plugin Nagios dan Plugin NRPE
-      Baik plugin Nagios dan NRPE tersedia secara default di repositori Ubuntu. Anda dapat menginstal paket-paket tersebut 
-      menggunakan perintah apt di bawah ini.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# sudo apt install monitoring-plugins nagios-nrpe-plugin
-            
-      Setelah instalasi selesai, buka direktori instalasi nagios "/usr/local/nagios/etc" dan buat direktori baru untuk 
-      menyimpan semua konfigurasi host server.
-            root@server-nagios:/usr/local/src/nagioscore-nagios-4.4.6# cd /usr/local/nagios/etc/
-            root@server-nagios:/usr/local/nagios/etc# mkdir -p /usr/local/nagios/etc/servers
-            
-      Selanjutnya, edit konfigurasi Nagios 'nagios.cfg' menggunakan editor vim.
-            root@server-nagios:/usr/local/nagios/etc# vim nagios.cfg
-            
-      Batalkan komentar pada opsi 'cfg dir' yang akan digunakan untuk menyimpan semua konfigurasi server hots.
-      BUANG PAGER NYA #
-            cfg_dir=/usr/local/nagios/etc/servers
-
-      Save and close.
-
-      Selanjutnya edit file konfigurasi "resource.cfg" dan tentukan path file binary dari Nagios Monitoring Plugins.
-            root@server-nagios:/usr/local/nagios/etc# vim resource.cfg
-
-      Tentukan jalur Plugin Pemantauan Nagios dengan mengubah konfigurasi default seperti di bawah ini.
-            $USER1$=/usr/local/nagios/libexec
-            $USER1$=/usr/lib/nagios/plugins
-
-      Save and close.
-
-      Simpan dan tutup, dan konfigurasi Nagioscore telah selesai.
-      Selanjutnya, mulai layanan Nagios dan tambahkan ke boot sistem.
-            root@server-nagios:/usr/local/nagios/etc# systemctl start nagios
-            root@server-nagios:/usr/local/nagios/etc# systemctl enable nagios
-            root@server-nagios:/usr/local/nagios/etc# systemctl status nagios
-
-      Akibatnya, layanan Nagios aktif dan berjalan. Sekarang kita perlu me-restart layanan Apache untuk menerapkan konfigurasi Nagios baru.
-            root@server-nagios:/usr/local/nagios/etc# systemctl restart apache2
-
-      Dan konfigurasi Nagios telah selesai.
-      Buka browser web Anda dan ketik alamat IP server mengikuti jalur URL "nagios".
-            http://192.168.100.43/nagios
-      Masuk dengan pengguna "nagiosadmin" dan ketik kata sandi Anda.
-      Hasilnya, Anda telah menginstal Nagios di server Ubuntu 20.04. Dan Anda dapat menambahkan host ke server Nagios.
-
-      Langkah 5 - Tambahkan Host Linux ke Monitor
-      Pada langkah ini, kita akan menambahkan server Ubuntu dengan nama host "client01" dan alamat IP "192.168.100.212" ke server Nagios.
-      - Instal Server NRPE di Server Client01
-      Masuk ke server "client01" menggunakan ssh Anda.
-            arif@Testing:~$ ssh arif@192.168.100.212
-
-      Setelah Anda masuk, perbarui repositori Ubuntu dan instal Plugin Nagios dan NRPE Server.
-            arif@server-wordpress:~$ sudo apt update
-            arif@server-wordpress:~$ sudo apt install nagios-nrpe-server monitoring-plugins
-
-      Selanjutnya, masuk ke direktori instalasi NRPE "/etc/nagios" dan edit file konfigurasi "nrpe.cfg".
-            arif@server-wordpress:~$ cd /etc/nagios
-            arif@server-wordpress:/etc/nagios$ vim nrpe.cfg
-
-      Batalkan komentar pada baris "server_address" dan ubah nilainya dengan alamat IP "client01".
-            server_address=192.168.100.212
-
-      Satu baris "allowed_hosts", tambahkan alamat IP Server Nagios "192.168.100.43".
-      IP 192.168.100.43 PUNYA server-nagios
-            allowed_hosts=127.0.0.1,::1,192.168.100.43
-      Save and close.
-
-      Selanjutnya, edit konfigurasi "nrpe_local.cfg".
-            arif@server-wordpress:/etc/nagios$ vim nrpe_local.cfg
-
-      Ubah alamat IP dengan alamat IP "client01", dan rekatkan konfigurasi ke dalamnya.
-            command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
-            command[check_ping]=/usr/lib/nagios/plugins/check_ping -H 192.168.100.212 -w 100.0,20% -c 500.0,60% -p 5
-            command[check_ssh]=/usr/lib/nagios/plugins/check_ssh -4 192.168.100.212
-            command[check_http]=/usr/lib/nagios/plugins/check_http -I 192.168.100.212
-            command[check_apt]=/usr/lib/nagios/plugins/check_apt
-
-      save dan close
-
-      Sekarang restart layanan NRPE dan tambahkan ke boot sistem.
-            arif@server-wordpress:/etc/nagios$ sudo systemctl restart nagios-nrpe-server.service
-            arif@server-wordpress:/etc/nagios$ sudo systemctl enable nagios-nrpe-server.service
-
-      Periksa layanan NRPE menggunakan perintah berikut.
-            arif@server-wordpress:/etc/nagios$ systemctl status nagios-nrpe-server.service
-
-      Selanjutnya, kembali ke Server Nagios dan periksa server NRPE "client01".
-      PASTIKAN Dan anda akan mendapatkan hasil seperti dibawah ini.        
-            root@server-nagios:/usr/local/nagios/etc# /usr/lib/nagios/plugins/check_nrpe -H 192.168.100.212
-            NRPE v4.0.0
-            root@server-nagios:/usr/local/nagios/etc# /usr/lib/nagios/plugins/check_nrpe -H 192.168.100.212 -c check_ping
-            PING OK - Packet loss = 0%, RTA = 0.09 ms|rta=0.089000ms;100.000000;500.000000;0.000000 pl=0%;20;60;0
-
-      Tambahkan Konfigurasi Host ke Server Nagios
-      Kembali ke terminal server Nagios, masuk ke direktori "/usr/local/nagios/etc" dan buat konfigurasi baru "server/client01.cfg".
-            root@server-nagios:/usr/local/nagios/etc# cd /usr/local/nagios/etc/
-            root@server-nagios:/usr/local/nagios/etc# vim servers/client01.cfg
-
-      Ubah alamat IP dan nama host dengan milik Anda dan rekatkan konfigurasi ke dalamnya.
-      Ubuntu Host configuration file1
-
-            define host {
-                    use                          linux-server
-                    host_name                    client01
-                    alias                        Ubuntu Host
-                    address                      192.168.100.212
-                    register                     1
-            }
-
-            define service {
-                  host_name                       client01
-                  service_description             PING
-                  check_command                   check_nrpe!check_ping
-                  max_check_attempts              2
-                  check_interval                  2
-                  retry_interval                  2
-                  check_period                    24x7
-                  check_freshness                 1
-                  contact_groups                  admins
-                  notification_interval           2
-                  notification_period             24x7
-                  notifications_enabled           1
-                  register                        1
-            }
-
-            define service {
-                  host_name                       client01
-                  service_description             Check Users
-                  check_command                   check_nrpe!check_users
-                  max_check_attempts              2
-                  check_interval                  2
-                  retry_interval                  2
-                  check_period                    24x7
-                  check_freshness                 1
-                  contact_groups                  admins
-                  notification_interval           2
-                  notification_period             24x7
-                  notifications_enabled           1
-                  register                        1
-            }
-
-            define service {
-                  host_name                       client01
-                  service_description             Check SSH
-                  check_command                   check_nrpe!check_ssh
-                  max_check_attempts              2
-                  check_interval                  2
-                  retry_interval                  2
-                  check_period                    24x7
-                  check_freshness                 1
-                  contact_groups                  admins
-                  notification_interval           2
-                  notification_period             24x7
-                  notifications_enabled           1
-                  register                        1
-            }
-        
-        define service {
-                  host_name                       client01
-                  service_description             Check Root / Disk
-                  check_command                   check_nrpe!check_root
-                  max_check_attempts              2
-                  check_interval                  2
-                  retry_interval                  2
-                  check_period                    24x7
-                  check_freshness                 1
-                  contact_groups                  admins
-                  notification_interval           2
-                  notification_period             24x7
-                  notifications_enabled           1
-                  register                        1
-        }
-        
-        define service {
-                  host_name                       client01
-                  service_description             Check APT Update
-                  check_command                   check_nrpe!check_apt
-                  max_check_attempts              2
-                  check_interval                  2
-                  retry_interval                  2
-                  check_period                    24x7
-                  check_freshness                 1
-                  contact_groups                  admins
-                  notification_interval           2
-                  notification_period             24x7
-                  notifications_enabled           1
-                  register                        1
-        }
-
-      save dan close
-      Sekarang restart Server Nagios.
-      KALO ERROR HAPUS CONFIGURE YANG DI ATAS   
-            </pre
+arif@server-ubuntu:~$ sudo vim /etc/hostname 
+server-nagios</pre
           >
         </code>
+        <p>Langkah 1: Masuk ke Server & Perbarui Paket OS Server</p>
+        <code>
+          <pre>arif@server-nagios:~$ sudo apt-get update</pre>
+        </code>
+        <p>Langkah 2: Instal Dependensi yang Diperlukan</p>
+        <p>Sebelum memulai, Kita perlu menginstal beberapa dependensi yang diperlukan untuk menginstal Nagios di sistem Anda. Anda dapat menginstal semuanya dengan perintah berikut:</p>
+        <code>
+          <pre>
+arif@server-nagios:~$ sudo apt-get install autoconf bc gawk dc build-essential gcc libc6 make wget unzip apache2 php 
+libapache2-mod-php libgd-dev libmcrypt-dev make libssl-dev snmp libnet-snmp-perl gettext -y</pre
+          >
+        </code>
+        <p>Setelah semua dependensi diinstal, Anda dapat melanjutkan untuk mengunduh inti Nagios 4.</p>
+        <p>Langkah 3: Unduh dan Instal Nagios 4</p>
+        <p>Pertama, unduh versi terbaru Nagios 4 dari situs resminya menggunakan perintah berikut:</p>
+        <code>
+          <pre>
+arif@server-nagios:~$ wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.6.tar.gz
+arif@server-nagios:~$ ls
+nagios-4.4.6.tar.gz</pre
+          >
+        </code>
+        <p>Setelah unduhan selesai, ekstrak file yang diunduh dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~$ tar -xvzf nagios-4.4.6.tar.gz </pre>
+        </code>
+        <p>Selanjutnya, ubah direktori ke direktori yang diekstraksi dan konfigurasikan dengan perintah berikut:</p>
+        <code>
+          <pre>
+arif@server-nagios:~$ cd nagios-4.4.6/
+arif@server-nagios:~/nagios-4.4.6$ ./configure --with-httpd-conf=/etc/apache2/sites-enabled</pre
+          >
+        </code>
+        <p>Kita harus mendapatkan output berikut:</p>
+        <code>
+          <pre>
+*** Configuration summary for nagios 4.4.6 2020-04-28 ***:
+
+General Options:
+-------------------------
+        Nagios executable:  nagios
+        Nagios user/group:  nagios,nagios
+      Command user/group:  nagios,nagios
+            Event Broker:  yes
+        Install ${prefix}:  /usr/local/nagios
+    Install ${includedir}:  /usr/local/nagios/include/nagios
+                Lock file:  /run/nagios.lock
+  Check result directory:  /usr/local/nagios/var/spool/checkresults
+          Init directory:  /lib/systemd/system
+  Apache conf.d directory:  /etc/apache2/sites-enabled
+            Mail program:  /bin/mail
+                  Host OS:  linux-gnu
+          IOBroker Method:  epoll
+
+Web Interface Options:
+------------------------
+                HTML URL:  http://localhost/nagios/
+                  CGI URL:  http://localhost/nagios/cgi-bin/
+Traceroute (used by WAP):  
+
+
+Review the options above for accuracy.  If they look okay,
+type 'make all' to compile the main program and CGIs.</pre
+          >
+        </code>
+        <p>Selanjutnya, buat nagios dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ make all</pre>
+        </code>
+        <p>Selanjutnya, buat pengguna dan grup Nagios dan tambahkan ke grup www-data dengan perintah berikut:</p>
+        <code>
+          <pre>
+arif@server-nagios:~/nagios-4.4.6$ sudo make install-groups-users 
+arif@server-nagios:~/nagios-4.4.6$ sudo usermod -a -G nagios www-data</pre
+          >
+        </code>
+        <p>Selanjutnya, jalankan perintah berikut untuk menginstal binari Nagios, daemon dan mode perintah:</p>
+        <code>
+          <pre>
+arif@server-nagios:~/nagios-4.4.6$ sudo make install 
+arif@server-nagios:~/nagios-4.4.6$ sudo make install-daemoninit 
+arif@server-nagios:~/nagios-4.4.6$ sudo make install-commandmode</pre
+          >
+        </code>
+        <p>Selanjutnya, instal contoh konfigurasi skrip dan konfigurasi web Apache menggunakan perintah berikut:</p>
+        <code>
+          <pre>
+arif@server-nagios:~/nagios-4.4.6$ sudo make install-config 
+arif@server-nagios:~/nagios-4.4.6$ sudo make install-webconf</pre
+          >
+        </code>
+        <p>Selanjutnya, aktifkan modul rewrite dan cgi dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo a2enmod rewrite cgi</pre>
+        </code>
+        <p>Selanjutnya, restart layanan Apache untuk menerapkan perubahan:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl restart apache2</pre>
+        </code>
+        <p>Langkah 4: Buat Pengguna Admin Nagios</p>
+        <p>Selanjutnya, Kita perlu membuat pengguna Nagios untuk mengakses antarmuka web Nagios. Kita dapat membuatnya dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin</pre>
+        </code>
+        <p>Kita akan diminta untuk mengatur kata sandi seperti yang ditunjukkan di bawah ini:</p>
+        <code>
+          <pre>
+New password: 
+Re-type new password: 
+Adding password for user arifadmin</pre
+          >
+        </code>
+        <p>Langkah 5: Konfigurasikan Nagios</p>
+        <p>Sebelum mengonfigurasi Nagios, Kita harus menginstal Plugin Nagios dan Plugin NRPE. Kita dapat menginstalnya dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo apt-get install monitoring-plugins nagios-nrpe-plugin -y</pre>
+        </code>
+        <p>Setelah semua paket diinstal, buat direktori untuk menyimpan semua konfigurasi:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo mkdir -p /usr/local/nagios/etc/servers</pre>
+        </code>
+        <p>Selanjutnya, edit file konfigurasi Nagios dan tentukan direktori server:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/nagios.cfg </pre>
+        </code>
+        <p>Buang Pagar nya #</p>
+        <p>Ubah baris berikut:</p>
+        <code>
+          <pre>cfg_dir=/usr/local/nagios/etc/servers</pre>
+        </code>
+        <p>Selanjutnya, edit Nagios resource.cfg dan tentukan jalur plugin Nagios:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/resource.cfg </pre>
+        </code>
+        <p>Yang ini kasih pagar -> #$USER1$=/usr/local/nagios/libexec</p>
+        <p>Ubah baris berikut:</p>
+        <code>
+          <pre>$USER1$=/usr/lib/nagios/plugins</pre>
+        </code>
+        <p>Simpan dan tutup file kemudian edit contacts.cfg dan tentukan nama kontak dan alamat email Anda:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/objects/contacts.cfg </pre>
+        </code>
+        <p>Ubah baris berikut sesuai kebutuhan Anda:</p>
+        <code>
+          <pre>
+define contact {
+
+contact_name            nagiosadmin             ; Short name of user
+use                     generic-contact         ; Inherit default values from generic-contact template (defined above)
+alias                   Nagios Admin            ; Full name of user
+email                   marifrizki27@gmail.com ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+}</pre
+          >
+        </code>
+        <p>Simpan dan tutup file kemudian edit command.cfg dan tentukan perintah nrpe check:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/objects/commands.cfg</pre>
+        </code>
+        <p>Tambahkan baris berikut di akhir file:</p>
+        <code>
+          <pre>
+define command{
+command_name check_nrpe
+command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+}</pre
+          >
+        </code>
+        <p>Simpan dan tutup file kemudian mulai layanan Nagios dan aktifkan untuk memulai saat reboot sistem:</p>
+        <code>
+          <pre>
+arif@server-nagios:~/nagios-4.4.6$ sudo systemctl start nagios
+arif@server-nagios:~/nagios-4.4.6$ sudo systemctl enable nagios</pre
+          >
+        </code>
+        <p>Kita juga dapat memverifikasi status layanan Nagios dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl status nagios</pre>
+        </code>
+        <p>Output</p>
+        <code>
+          <pre>
+● nagios.service - Nagios Core 4.4.6
+     Loaded: loaded (/lib/systemd/system/nagios.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sat 2022-03-26 22:21:00 UTC; 1min 12s ago
+       Docs: https://www.nagios.org/documentation
+    Process: 52032 ExecStartPre=/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg (co>
+    Process: 52038 ExecStart=/usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg (code=>
+   Main PID: 52040 (nagios)
+      Tasks: 6 (limit: 1073)
+     Memory: 2.8M
+     CGroup: /system.slice/nagios.service
+             ├─52040 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+             ├─52041 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+             ├─52042 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+             ├─52043 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+             ├─52044 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+             └─52048 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+
+Mar 26 22:21:00 server-nagios nagios[52040]: qh: Socket '/usr/local/nagios/var/rw/nagios.qh' success>
+Mar 26 22:21:00 server-nagios nagios[52040]: qh: core query handler registered
+Mar 26 22:21:00 server-nagios nagios[52040]: qh: echo service query handler registered
+Mar 26 22:21:00 server-nagios nagios[52040]: qh: help for the query handler registered
+Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Successfully registered manager as @wproc with q>
+Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52041;pid=520>
+Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52042;pid=520>
+Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52044;pid=520>
+Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52043;pid=520>
+Mar 26 22:21:02 server-nagios nagios[52040]: Successfully launched command file worker with pid 52048
+          </pre>
+        </code>
+        <p>Terakhir, restart layanan Apache untuk menerapkan perubahan:</p>
+        <code>
+          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl restart apache2</pre>
+        </code>
+        <p>Langkah 6: Akses UI Web Nagios</p>
+        <p>Sekarang, buka browser web Kita dan akses antarmuka web Nagios menggunakan URL http://nagios-server-ip/nagios/. Anda akan diminta untuk memberikan username dan password admin seperti yang ditunjukkan di bawah ini:</p>
+        <img src="img/1.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>Berikan nama pengguna, kata sandi, dan kata sandi admin Nagios Kita dan klik tombol Masuk.</p>
+        <p>Kita akan melihat dasbor Nagios di halaman berikut:</p>
+        <img src="img/2.png" alt="tampilan nagios" width="1000" class="rounded-circle img-thumbnail" />
+        <p>Klik pada service di panel kiri, Kita akan melihat semua layanan di halaman berikut:</p>
+        <img src="img/3.png" alt="tampilan nagios" width="1000" class="rounded-circle img-thumbnail" />
+        <p>Langkah 7: Tambahkan Host Pemantauan ke Server Nagios</p>
+        <p>Selanjutnya, Kita perlu menginstal agen Nagios pada sistem klien dan menambahkannya ke server Nagios.</p>
+        <p>Pertama, instal paket Nagios dan NRPE pada sistem klien dengan perintah berikut:</p>
+        <p>Masuk Ke server Joomla</p>
+        <code>
+          <pre>arif@Testing:~$ ssh arif@192.168.100.88</pre>
+          <pre>arif@server-joomla:~$ sudo apt-get update</pre>
+          <pre>arif@server-joomla:~$ sudo apt-get install nagios-nrpe-server monitoring-plugins -y</pre>
+        </code>
+        <p>Setelah terinstal, edit file nrpe.cfg dan tentukan IP server Nagios dan IP CLient Anda:</p>
+        <code>
+          <pre>arif@server-joomla:~$ sudo vim /etc/nagios/nrpe.cfg</pre>
+        </code>
+        <p>Ubah baris berikut yang cocok dengan IP server dan klien Anda:</p>
+        <p>192.168.100.88 itu IP Client Joomla</p>
+        <p>192.168.100.118 itu IP Server Nagios:</p>
+        <code>
+          <pre>
+server_address=192.168.100.88
+allowed_hosts=127.0.0.1,::1,192.168.100.118</pre
+          >
+        </code>
+        <p>Simpan dan tutup file. Kemudian edit nrpe_local.cfg:</p>
+        <code>
+          <pre>arif@server-joomla:~$ sudo vim /etc/nagios/nrpe_local.cfg</pre>
+        </code>
+        <p>Tambahkan atau ubah baris berikut:</p>
+        <code>
+          <pre>
+command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
+command[check_ping]=/usr/lib/nagios/plugins/check_ping -H 192.168.100.88 -w 100.0,20% -c 500.0,60% -p 5
+command[check_http]=/usr/lib/nagios/plugins/check_http -I 192.168.100.88
+command[check_ssh]=/usr/lib/nagios/plugins/check_ssh -4 192.168.100.88</pre
+          >
+        </code>
+        <p>Simpan dan tutup file kemudian restart layanan Nagios NRPE dan aktifkan untuk memulai saat reboot sistem:</p>
+        <code>
+          <pre>
+arif@server-joomla:~$ sudo systemctl restart nagios-nrpe-server.service 
+arif@server-joomla:~$ sudo systemctl enable nagios-nrpe-server.service </pre
+          >
+        </code>
+        <p>Kita dapat memeriksa status layanan dengan perintah berikut:</p>
+        <code>
+          <pre>arif@server-joomla:~$ sudo systemctl status nagios-nrpe-server.service</pre>
+        </code>
+        <p>Output</p>
+        <code>
+          <pre>
+● nagios-nrpe-server.service - Nagios Remote Plugin Executor
+     Loaded: loaded (/lib/systemd/system/nagios-nrpe-server.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sat 2022-03-26 23:41:57 UTC; 56s ago
+       Docs: http://www.nagios.org/documentation
+   Main PID: 28782 (nrpe)
+      Tasks: 1 (limit: 1071)
+     Memory: 744.0K
+     CGroup: /system.slice/nagios-nrpe-server.service
+             └─28782 /usr/sbin/nrpe -c /etc/nagios/nrpe.cfg -f
+
+Mar 26 23:41:57 server-joomla systemd[1]: Started Nagios Remote Plugin Executor.
+Mar 26 23:41:57 server-joomla nrpe[28782]: Starting up daemon
+Mar 26 23:41:57 server-joomla nrpe[28782]: Server listening on 192.168.100.88 port 5666.
+Mar 26 23:41:57 server-joomla nrpe[28782]: Listening for connections on port 5666
+Mar 26 23:41:57 server-joomla nrpe[28782]: Allowing connections from: 127.0.0.1,::1,192.168.100.118</pre
+          >
+        </code>
+        <p>Langkah 8: Tambahkan Host Klien ke Server Nagios</p>
+        <p>Selanjutnya, Kita perlu menambahkan host klien ke server Nagios dan menentukan layanan yang ingin Kita pantau.</p>
+        <p>Di server Nagios, buat file baru bernama nagiosclient.cfg:</p>
+        <p>Di Server NaGIOS</p>
+        <code>
+          <pre>arif@server-nagios:/usr/local/nagios/etc$ sudo vim /usr/local/nagios/etc/servers/nagiosclient.cfg</pre>
+          <pre>
+define host {
+      use                          linux-server
+      host_name                    nagiosclient
+      alias                        Ubuntu Host
+      address                      192.168.100.88
+      register                     1
+}
+
+define service {
+      host_name                       nagiosclient
+      service_description             PING
+      check_command                   check_nrpe!check_ping
+      max_check_attempts              2
+      check_interval                  2
+      retry_interval                  2
+      check_period                    24x7
+      check_freshness                 1
+      contact_groups                  admins
+      notification_interval           2
+      notification_period             24x7
+      notifications_enabled           1
+      register                        1
+}
+
+define service {
+      host_name                       nagiosclient
+      service_description             Check Users
+      check_command                   check_nrpe!check_users
+      max_check_attempts              2
+      check_interval                  2
+      retry_interval                  2
+      check_period                    24x7
+      check_freshness                 1
+      contact_groups                  admins
+      notification_interval           2
+      notification_period             24x7
+      notifications_enabled           1
+      register                        1
+}
+
+define service {
+      host_name                       nagiosclient
+      service_description             Check SSH
+      check_command                   check_nrpe!check_ssh
+      max_check_attempts              2
+      check_interval                  2
+      retry_interval                  2
+      check_period                    24x7
+      check_freshness                 1
+      contact_groups                  admins
+      notification_interval           2
+      notification_period             24x7
+      notifications_enabled           1
+      register                        1
+}
+
+define service {
+      host_name                       nagiosclient
+      service_description             Check Root / Disk
+      check_command                   check_nrpe!check_root
+      max_check_attempts              2
+      check_interval                  2
+      retry_interval                  2
+      check_period                    24x7
+      check_freshness                 1
+      contact_groups                  admins
+      notification_interval           2
+      notification_period             24x7
+      notifications_enabled           1
+      register                        1
+}
+
+define service {
+      host_name                       nagiosclient
+      service_description             Check HTTP
+      check_command                   check_nrpe!check_http
+      max_check_attempts              2
+      check_interval                  2
+      retry_interval                  2
+      check_period                    24x7
+      check_freshness                 1
+      contact_groups                  admins
+      notification_interval           2
+      notification_period             24x7
+      notifications_enabled           1
+      register                        1
+}
+    </pre
+          >
+        </code>
+        <p>Simpan dan tutup file kemudian restart layanan Nagios untuk menerapkan perubahan:</p>
+        <code>
+          <pre>
+arif@server-nagios:/usr/local/nagios/etc$ sudo systemctl restart nagios
+arif@server-nagios:/usr/local/nagios/etc$ sudo systemctl status nagios</pre
+          >
+        </code>
+        <p>Langkah 9: Verifikasi Nagios</p>
+        <p>Sekarang, kembali ke antarmuka web Nagios dan klik hosts di panel kiri, Kita akan melihat semua host klien yang baru ditambahkan di halaman berikut:</p>
+        <img src="img/4.png" alt="tampilan nagios" width="1000" class="rounded-circle img-thumbnail" />
+        <p>Sekarang, klik pada tab service di panel kiri, Kita akan melihat semua layanan di halaman berikut:</p>
+        <img src="img/5.png" alt="tampilan nagios" width="1000" class="rounded-circle img-thumbnail" />
       </section>
 
       <section class="main-section" id="Open_VPN_IPv4">
