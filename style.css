@@ -45,7 +45,8 @@ main {
 }
 
 code pre {
-  background-color: rgb(80, 80, 80);
+  background-color: rgb(122, 122, 122);
+  width: 1050px;
   padding: 20px;
 }
 
