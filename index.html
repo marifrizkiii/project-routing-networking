@@ -5,1295 +5,488 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>FCC Technical Documentation</title>
+    <title>Routing Documentation Networking</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <nav id="navbar">
-      <header>My Documents Installation Project</header>
-      <a href="#Firewal" class="nav-link">Firewal</a>
-      <a href="#Installation_Snort" class="nav-link">Installation Snort</a>
-      <a href="#Installation_Snowl_Snort_GUI" class="nav-link">Installation Snowl-Snort GUI</a>
-      <a href="#Installation_Rkhunter" class="nav-link">Installation Rkhunter</a>
-      <a href="#Installation_Nagios" class="nav-link">Installation NaGIOS</a>
-      <a href="#Open_VPN_IPv4" class="nav-link">Open VPN IPv4</a>
+      <header>My Documents Routing Networking</header>
+      <a href="#Network_Security" class="nav-link">Network Security</a>
+      <a href="#Advanced_Routing_OSPF_BGP_With_Mikrotik" class="nav-link">Advanced Routing OSPF-BGP With Mikrotik</a>
+      <a href="#Advanced_Routing_OSPF_BGP_With_Cisco" class="nav-link">Advanced Routing OSPF-BGP With Cisco</a>
     </nav>
     <main id="main-doc">
-      <section class="main-section" id="Firewal">
-        <header>What Is a Firewall?</header>
+      <section class="main-section" id="Network_Security">
+        <header>Types of network security</header>
         <p>
-          A firewall is a network security device that monitors incoming and outgoing network traffic and decides whether to allow or block specific traffic based on a defined set of security rules. Firewalls have been a first line of
-          defense in network security for over 25 years. They establish a barrier between secured and controlled internal networks that can be trusted and untrusted outside networks, such as the Internet. A firewall can be hardware,
-          software, or both.
-        </p>
+          Network Access Control
+
+          To ensure that potential attackers cannot infiltrate your network, comprehensive access control policies need to be in place for both users and devices. Network access control (NAC) can be set at the most granular level. 
+          For example, you could grant administrators full access to the network but deny access to specific confidential folders or prevent their personal devices from joining the network.</p>
+          
+          <p>Antivirus and Antimalware Software
+          
+          Antivirus and antimalware software protect an organization from a range of malicious software, including viruses, ransomware, worms and trojans. 
+          The best software not only scans files upon entry to the network but continuously scans and tracks files.</p>
+          
+          <p>Firewall Protection
+          
+          Firewalls, as their name suggests, act as a barrier between the untrusted external networks and your trusted internal network. 
+          Administrators typically configure a set of defined rules that blocks or permits traffic onto the network. For example, Forcepoint's Next Generation Firewall (NGFW) offers seamless and centrally managed control of network traffic, whether it is physical, virtual or in the cloud.</p>
+
+          <p>Virtual Private Networks
+          Virtual private networks (VPNs) create a connection to the network from another endpoint or site. For example, users working from home would typically connect to the organization's network over a VPN. 
+          Data between the two points is encrypted and the user would need to authenticate to allow communication between their device and the network. 
+          Forcepoint's Secure Enterprise SD-WAN allows organizations to quickly create VPNs using drag-and-drop and to protect all locations with our Next Generation Firewall solution.</p>
       </section>
 
-      <section class="main-section" id="Installation_Snort">
-        <header>IDS and IPS</header>
-        <p>
-          What is Snort? Snort is the foremost Open Source Intrusion Prevention System (IPS) in the world. Snort IPS uses a series of rules that help define malicious network activity and uses those rules to find packets that match against
-          them and generates alerts for users. Snort can be deployed inline to stop these packets, as well. Snort has three primary uses: As a packet sniffer like tcpdump, as a packet logger — which is useful for network traffic debugging,
-          or it can be used as a full-blown network intrusion prevention system. Snort can be downloaded and configured for personal and business use alike.
-        </p>
-
-        <p>
-          What are my options for buying and using Snort? Once downloaded and configured, Snort rules are distributed in two sets: The “Community Ruleset” and the “Snort Subscriber Ruleset.” The Snort Subscriber Ruleset is developed,
-          tested, and approved by Cisco Talos. Subscribers to the Snort Subscriber Ruleset will receive the ruleset in real-time as they are released to Cisco customers. You can download the rules and deploy them in your network through the
-          Snort.org website. The Community Ruleset is developed by the Snort community and QAed by Cisco Talos. It is freely available to all users.
-        </p>
-
-        <p>For more information about Snort Subscriber Rulesets available for purchase, please visit the Snort product page.</p>
-        <header>Install Snort Dan Cara Menulis Rules</header>
-        <p>Find the appropriate package for your operating system and install.</p>
-        <p>Siapkan Aplikasi Pendukung.</p>
+      <section class="main-section" id="Advanced_Routing_OSPF_BGP_With_Mikrotik">
+        <header>Advanced Routing OSPF BGP Mikrotik</header>
+        <p>Routing</p>
+        <p>CHECK MASIH BELUM DAPET IP INI DI MIKROTIK 1</p>
         <code>
           <pre>
-root@server-IDS-IPS:~# sudo locale-gen id_ID.UTF-8
-root@server-IDS-IPS:~# sudo apt-get update</pre
+[admin@MikroTik] > /ip address print
+Flags: X - disabled, I - invalid, D - dynamic
+ #   ADDRESS            NETWORK         INTERFACE</pre
           >
         </code>
-
-        <p>ifconfig dulu cek interface dan IP nya, Lalu Install</p>
-        <code>
-          <pre>root@server-IDS-IPS:~# apt-get install oinkmaster snort snort-common snort-rules-default snort-doc</pre>
-        </code>
-
-        <p>Akan Di Tanya interface yang akan di monitor, misalnya: enp0s3 range IP yang di monitor, misalnya: 192.168.100.0/24</p>
-
-        <p>Cek Snort</p>
-        <code>
-          <pre> root@server-IDS-IPS:~# snort -C </pre>
-        </code>
-
-        <p>Jalankan Snort mode NIDS</p>
-        <code>
-          <pre> root@server-IDS-IPS:~# snort -dev -l /var/log/snort/ -h 192.168.0.0/24 -c /etc/snort/snort.conf &</pre>
-        </code>
-
-        <p>Ingin supaya bisa di baca di kemudian hari oleh wireshark harus di simpan dalam bentuk binary, dengan perintah</p>
-        <code>
-          <pre>/usr/sbin/snort -m 027 -b -l /var/log/snort/ -u arif -c /etc/snort/snort.conf -S HOME_NET=[192.168.100.0/24] -i wlp2s0 &</pre>
-        </code>
-
-        <p>Biar tidak rewel, sebaiknya permission /var/log/snort di jadikan</p>
-        <code>
-          <pre>chmod 770 /var/log/snort</pre>
-        </code>
-        <p>Ini sebetulnya cara yang tidak baik!!! PAKE YANG BAWAH AJA BUAT JALANKAN SNORT NYA</p>
-        <p>Menjalankan Snort mode NIDS, log text</p>
-        <p>log /var/log/snort bisa di baca oleh manusia, kita bisa menjalankan snort dengan perintah,</p>
-        <code>
-          <pre>root@server-IDS-IPS:~# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D</pre>
-        </code>
-        <p>Check Snort</p>
-        <code>
-          <pre>root@server:/home/arif# ps ax | grep snort</pre>
-        </code>
-
-        <p>Kalo Kill Snort</p>
+        <p>MINTA IP</p>
         <code>
           <pre>
-root@server:/var/log/snort# killall snort
-root@server:/var/log/snort# ps ax | grep snort
-7444 pts/0    S+     0:00 grep --color=auto snort</pre
+[admin@MikroTik] > /ip dhcp-client add interface=ether3 disabled=no
+[admin@MikroTik] > /ip address print
+Flags: X - disabled, I - invalid, D - dynamic
+ #   ADDRESS            NETWORK         INTERFACE                              
+ 0 D 192.168.122.233/24 192.168.122.0   ether3</pre
           >
         </code>
-
-        <p>Check</p>
+        <p>CEK, PING</p>
         <code>
           <pre>
-root@server:/etc/snort# vi snort.conf  
-root@server:/etc/snort# vi classification.config</pre
+[admin@MikroTik] > ping 192.168.100.1
+SEQ HOST                                     SIZE TTL TIME  STATUS
+0 192.168.100.1                              56  63 3ms
+1 192.168.100.1                              56  63 2ms
+        </pre
           >
         </code>
-
-        <p>KALO 1 ARTI NYA WARNA MERAH BAGUS</p>
-        <p>KALO 2 ARTI NYA KUNING WARNING</p>
-        <p>KALO 3 ARTINYA IJO BAHAYA</p>
         <code>
-          <pre>classification: trojan-activity,A Network Trojan was detected, 1</pre>
           <pre>
-root@server:/etc/snort# cd rules/
-root@server:/etc/snort/rules# more community-oracle.rules</pre
+[admin@MikroTik] > /ip address add address=10.10.1.1/30 interface=ether1
+[admin@MikroTik] > /ip address add address=10.10.1.5/30 interface=ether2</pre
           >
         </code>
-
-        <p>Yang Penting Kata-Kata content:</p>
-        <p>Menjalankan Snort mode NIDS, log text</p>
-        <p>Agar log /var/log/snort bisa di baca oleh manusia, kita bisa menjalankan snort dengan perintah,</p>
+        <p>PERHATIKAN DI BAGIAN ADDRESS 0 D 192.168.122.233/24 ADA TULISAN D BERARTI DYNAMIC</p>
+        <p>IP ADDRES 1 DAN 2 ITU IP STATIK</p>
         <code>
           <pre>
-root@server:/var/log/snort# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D
-root@server:/var/log/snort# watch -n 3 tail /var/log/snort/alert</pre
+[admin@MikroTik] > /ip address print
+Flags: X - disabled, I - invalid, D - dynamic
+ #   ADDRESS            NETWORK         INTERFACE                              
+ 0 D 192.168.122.233/24 192.168.122.0   ether3
+ 1   10.10.1.1/30       10.10.1.0       ether1
+ 2   10.10.1.5/30       10.10.1.4       ether2</pre
           >
         </code>
-
-        <p>Sebagai Contoh Kalo Kita Scan Nmap AKAN keluar</p>
-        <p>nmap -v -sS -O 192.168.100.21</p>
+        <p>MENGAKTIFKAN NAT</p>
         <code>
           <pre>
-      [**] [1:1228:7] SCAN nmap XMAS [**]
-      [Classification: Attempted Information Leak] [Priority: 2]
-      09/25-17:36:04.058342 192.168.100.122:63434 -> 192.168.100.21:1
-      TCP TTL:55 TOS:0x0 ID:16877 IpLen:20 DgmLen:60</pre
+[admin@MikroTik] > /ip firewall nat add chain=srcnat out-interface=ether3 action=masquerade
+[admin@MikroTik] > /ip firewall nat print
+Flags: X - disabled, I - invalid, D - dynamic
+  0    chain=srcnat action=masquerade out-interface=ether3</pre
           >
         </code>
-
-        <p>Kalo Untuk Buat Snort Rules Harus Ngerti Regex</p>
-        <p>Kalo Mau Nyadap Paket Yang Lewat Dan Kita Kasih REGEX Supaya Kita Extrak Ini Mahkluk Apa Si Kira-Kira Ke Gitu Nyadap Seperti Kayak WIRESHARK Kalo Ini Nyadap Versi CLI TCPDUMP</p>
-        <code>
-          <pre>root@server:/var/log/snort# snort -C</pre>
-        </code>
-
-        <p>Membuat Rules Sederhana</p>
+        <p>SEKARANG KE MIKROTIK 2</p>
+        <p>BELUM DAPET IP</p>
         <code>
           <pre>
-root@server:/var/log/snort# cd /etc/snort/rules/
-root@server:/etc/snort/rules# vi local.rules</pre
+[admin@MikroTik] > /ip address print
+Flags: X - disabled, I - invalid, D - dynamic
+#   ADDRESS            NETWORK         INTERFACE                              
+
+[admin@MikroTik] > /ip address add address=10.10.1.6/30 interface=ether1
+[admin@MikroTik] > /ip address add address=10.10.1.9/30 interface=ether2
+[admin@MikroTik] > /ip address add address=172.16.1.1/16 interface=ether3</pre
           >
         </code>
-
-        <p>Seperti Ini Tuliskan Dan Save</p>
-        <code>
-          <pre>alert tcp any any -> 192.168.100.21 22 (msg: "Ada Yang Connect SSH Ke Mesin!!"; sid:1000001;)</pre>
-        </code>
-
-        <p>Kill Dulu</p>
-        <code>
-          <pre>root@server:/etc/snort/rules# killall snort</pre>
-        </code>
-
-        <p>Kita remove dulu biar bersih log nya</p>
+        <p>DI PC1</p>
         <code>
           <pre>
-root@server:/etc/snort/rules# cd /var/log/snort/
-root@server:/var/log/snort# rm -Rf *</pre
-          >
-        </code>
-
-        <p>Jalan Kan Lagi</p>
-        <code>
-          <pre>root@server:/etc/snort/rules# snort -c /etc/snort/snort.conf -l /var/log/snort/ -K ascii -D</pre>
-        </code>
-
-        <p>Cek Pake Ps Ax (Liat Software Jalan Di Belakang Layar) Dan Pakai wacth</p>
-        <code>
-          <pre>
-root@server:/etc/snort/rules# ps ax
-root@server:/var/log/snort# watch -n 3 tail /var/log/snort/alert</pre
-          >
-        </code>
-
-        <p>Kita Coba SSH Ke Server</p>
-
-        <p>Akan Keluar</p>
-        <code>
-          <pre>
-      [**] [1:1000001:0] Ada Yang Connect SSH Ke Mesin!! [**]
-      [Priority: 0]
-      09/25-18:32:00.622198 192.168.100.79:51814 -> 192.168.100.21:3000</pre
-          >
-        </code>
-
-        <p>Bisa Cek Ke</p>
-        <code>
-          <pre>root@server:/var/log/snort# vi alert</pre>
-        </code>
-      </section>
-
-      <section class="main-section" id="Installation_Snowl_Snort_GUI">
-        <header>Snowl - Snort Gui</header>
-        <p>
-          What is Snowl? Snowl is a modern web-based GUI (graphical user interface) for snort. Snort is an open source IDS/IPS (intrusion detection/prevention system). It is command-line tool and has not own graphical interface. Therefore,
-          we decided to create Snowl so that the snort setting became automatic and understandable, and the analysis of threats was as convenient as possible.
-        </p>
-        <header>Instalation</header>
-        <p>Please choose your operating system to view the installation guide i use ubuntu.</p>
-        <p>1. MENDAPATKAN HAK ISTIMEWA PENGGUNA SUPER (ROOT)</p>
-        <p>Instalasi Snort dan Snowl di Ubuntu membutuhkan hak superuser (root). Cara paling sederhana adalah mendapatkan terminal dengan hak akses root menggunakan perintah su (kata sandi pengguna root harus dimasukkan):</p>
-        <code>
-          <pre>
-arif@Testing:~$ ssh arif@192.168.100.127
-arif@server-IDS-IPS:~$ sudo su
-arif@server-IDS-IPS:~# sudo apt-get update </pre
-          >
-        </code>
-        <p>2. SNOWL AUTOMATIC INSTALLATION SCRIPT</p>
-        <p>Semua langkah yang diperlukan untuk menginstal Snort, Snowl, yang dijelaskan di bawah ini disatukan menjadi skrip, Anda dapat mengunduh dan menjalankannya menggunakan perintah berikut:</p>
-        <p>Biasa Nya Saya Simpan Hasil Download Nya Disini</p>
-        <code>
-          <pre>
-root@server-IDS-IPS:/home/arif# cd /usr/local/src/
-root@server-IDS-IPS:/usr/local/src# wget https://snowl.io/download/snowl-install-ubuntu.sh && bash ./snowl-install-ubuntu.sh</pre
-          >
-        </code>
-        <p>Skrip akan melakukan langkah-langkah yang dijelaskan di bawah dengan persetujuan otomatis ke varian yang direkomendasikan.</p>
-        <p>Hanya dua pertanyaan yang akan diajukan:</p>
-        <p>KETIK yes</p>
-        <code>
-          <pre>
-Install Snowl? (yes/no, default yes): yes</pre>
-        </code>
-        <p>AKAN DI TANYA LAGI KETIK yes</p>
-        <code>
-          <pre>
-Now you can see snowl at address http://<HOST_IP>:5500
-Сongratulations, the Snowl is successfully installed
-Install Snowl-sensor? (yes/no, default yes): yes</pre>
-        </code>
-        <p>VERIFIKASI INSTALASI</p>
-        <p>Untuk memverifikasi kebenaran pemasangan, buka browser (disarankan Google Chrome atau Mozilla Firefox) dan ketik yang berikut di bilah alamat:</p>
-        <p>http://192.168.100.127:5500/</p>
-        <img src="img_Snowl_Snort/1.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>di mana [alamat IP] – sesuai dengan alamat IP server tempat SNOWL diinstal.</p>
-        <p>Anda akan melihat halaman login antarmuka Snowl. (Pengingat: Secara default, nama pengguna dan kata sandi Anda masing-masing sama dengan admin dan 123456. Kami</p>
-        <p>Tampilan Dasboard Masih Kosong</p>
-        <img src="img_Snowl_Snort/2.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>INSTALLATION OF SNOWL SENSOR</p>
-        <p>INSTALL SNORT DI SERVER YANG AKAN DI MONITOR</p>
-        <p>Jika Anda sudah menginstal dan menjalankan Snort, pastikan Anda menggunakan versi stabil terbaru</p>
-        <p>Untuk menginstal Snort dari repositori snowl/snort, jalankan perintah berikut:</p>
-        <code>
-          <pre>
-root@server-ubuntu:/home/arif# add-apt-repository ppa:snowl/snort
-root@server-ubunu:/home/arif# apt update
-root@server-ubuntu:/home/arif# apt install -y snort</pre>
-        </code>
-        <p>Sebaiknya nonaktifkan autorun dengan perintah Snort yang dijelaskan di bawah ini. Snowl akan mengontrol mulai dan berhenti.</p>
-        <code>
-          <pre>
-root@server-ubuntu:/home/arif# systemctl stop snort
-root@server-ubuntu:/home/arif# systemctl disable snort</pre>
-        </code>
-        <p>Untuk memasang sensor Snowl, jalankan:</p>
-        <code>
-          <pre>
-wget https://snowl.io/download/snowl-sensor_1.7.2_amd64.deb && dpkg -i ./snowl-sensor_1.7.2_amd64.deb</pre>
-        </code>
-        <p>Kemudian, Anda perlu mengatur hak untuk pengoperasian sensor Snowl dengan Snort (mulai/berhenti). Untuk tujuan ini, jalankan:</p>
-        <code>
-          <pre>
-root@server-ubuntu:/home/arif# /opt/snowl-sensor/snowl-snort fix
-Success</pre>
-        </code>
-        <p>Configuration</p>
-        <p>Masukuan Rule Nya Yang Sudah Tersedia</p>
-        <img src="img_Snowl_Snort/3.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <img src="img_Snowl_Snort/4.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>Server Yang Akan Di Monitor</p>
-        <img src="img_Snowl_Snort/5.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>Setelah Sudah Selesai Pilih Start</p>
-        <img src="img_Snowl_Snort/6.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-      </section>
-
-      <section class="main-sections" id="Installation_Rkhunter">
-        <header>Rkhunter</header>
-        <p>
-          One potential concern is rootkits. Rootkits are software secretly installed by malicious intruders that allow those users to resume access to servers after security is breached. This is a very dangerous problem, because even after
-          the vector entry that the user originally used to gain permanent access, they can continue to log into the server using the rootkit they installed. One tool that can help you protect your system from problems like this is
-          rkhunter. This software checks your system against a database of known rootkits. Also, it can check other system files to make sure they match the expected properties and values.
-        </p>
-        <header>Install RKHunter Dan Cara Menggunakan</header>
-        <p>Please choose your operating system to view the installation guide i use ubuntu.</p>
-
-        <p>Compile RKHunter</p>
-        <p>INSTALL APLIKASI PENDUKUNG</p>
-        <code>
-          <pre>
-root@server-IDS-IPS:/usr/local/src# sudo locale-gen id_ID.UTF-8
-root@server-IDS-IPS:/usr/local/src# sudo apt-get update
-root@server-IDS-IPS:/usr/local/src# sudo apt-get -y install binutils libreadline5 libruby ruby ssl-cert unhide.rb mailutils</pre
-          >
-        </code>
-
-        <p>MASUKAN</p>
-        <code>
-          <pre>
-- Site localhost
-- Relay Site kalau pakai INDIHOME : smtp.telkom.net</pre
-          >
-        </code>
-
-        <p>Sebelum Download Check Versi Terakhir</p>
-        <code>
-          <pre>
-cd /usr/local/src/
-root@server-IDS-IPS:/usr/local/src# wget http://downloads.sourceforge.net/project/rkhunter/rkhunter/1.4.6/rkhunter-1.4.6.tar.gz
-root@server-IDS-IPS:/usr/local/src# tar xzvf rkhunter-1.4.6.tar.gz*
-root@server-IDS-IPS:/usr/local/src# cd rkhunter-1.4.6*</pre
-          >
-        </code>
-
-        <p>Install Di /usr</p>
-        <code>
-          <pre>
-root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# ./installer.sh --layout /usr --install
-root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --versioncheck</pre
-          >
-        </code>
-
-        <p>OUTPUT</p>
-        <code>
-          <pre>
-[ Rootkit Hunter version 1.4.6 ]
-Checking rkhunter version...
-This version  : 1.4.6
-Latest version: 1.4.6</pre
-          >
-        </code>
-
-        <p>UPDATE DATA FILE</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --update</pre>
-        </code>
-
-        <p>Set properties update / baseline</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --propupd</pre>
-        </code>
-        <p>OUTPUT</p>
-        <code>
-          <pre>
-[ Rootkit Hunter version 1.4.6 ]
-File created: searched for 180 files, found 139</pre
-          >
-        </code>
-
-        <p>Jalankan</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none</pre>
-        </code>
-        <p>Dia akan menjalan test per section.</p>
-        <p>Output</p>
-        <code>
-          <pre>
-[ Rootkit Hunter version 1.4.6 ]
-
-Checking system commands...
-
-  Performing 'strings' command checks
-    Checking 'strings' command                               [ OK ]
-
-  Performing 'shared libraries' checks
-    Checking for preloading variables                        [ None found ]
-    Checking for preloaded libraries                         [ None found ]
-    Checking LD_LIBRARY_PATH variable                        [ Not found ]
-
-  Performing file properties checks
-    Checking for prerequisites                               [ OK ]
-    /usr/sbin/adduser                                        [ Warning ]
-    /usr/sbin/chroot                                         [ OK ]
-    /usr/sbin/cron                                           [ OK ]
-    /usr/sbin/depmod                                         [ OK ]
-    /usr/sbin/fsck                                           [ OK ]
-    /usr/sbin/groupadd                                       [ OK ]
-    /usr/sbin/groupdel                                       [ OK ]
-    /usr/sbin/groupmod                                       [ OK ]
-    /usr/sbin/grpck                                          [ OK ]
-    /usr/sbin/ifconfig                                       [ OK ]
-    /usr/sbin/init                                           [ OK ]
-    /usr/sbin/insmod                                         [ OK ]
-    /usr/sbin/ip                                             [ OK ]
-    /usr/sbin/lsmod                                          [ OK ]
-    /usr/sbin/modinfo                                        [ OK ]
-    /usr/sbin/modprobe                                       [ OK ]
-    /usr/sbin/nologin                                        [ OK ]
-    /usr/sbin/pwck                                           [ OK ]
-    /usr/sbin/rmmod                                          [ OK ]
-    /usr/sbin/route                                          [ OK ]
-    /usr/sbin/rsyslogd                                       [ OK ]
-    /usr/sbin/runlevel                                       [ OK ]
-    /usr/sbin/sshd                                           [ OK ]
-    /usr/sbin/sulogin                                        [ OK ]
-    /usr/sbin/sysctl                                         [ OK ]
-    /usr/sbin/useradd                                        [ OK ]
-    /usr/sbin/userdel                                        [ OK ]
-    /usr/sbin/usermod                                        [ OK ]
-    /usr/sbin/vipw                                           [ OK ]
-    /usr/bin/awk                                             [ OK ]
-    /usr/bin/basename                                        [ OK ]
-    /usr/bin/bash                                            [ OK ]
-    /usr/bin/cat                                             [ OK ]
-    /usr/bin/chattr                                          [ OK ]
-    /usr/bin/chmod                                           [ OK ]
-    /usr/bin/chown                                           [ OK ]
-    /usr/bin/cp                                              [ OK ]
-    /usr/bin/curl                                            [ OK ]
-    /usr/bin/cut                                             [ OK ]
-    /usr/bin/date                                            [ OK ]
-    /usr/bin/df                                              [ OK ]
-    /usr/bin/diff                                            [ OK ]
-    /usr/bin/dirname                                         [ OK ]
-    /usr/bin/dmesg                                           [ OK ]
-    /usr/bin/dpkg                                            [ OK ]
-    /usr/bin/dpkg-query                                      [ OK ]
-    /usr/bin/du                                              [ OK ]
-    /usr/bin/echo                                            [ OK ]
-    /usr/bin/ed                                              [ OK ]
-    /usr/bin/egrep                                           [ Warning ]
-    /usr/bin/env                                             [ OK ]
-    /usr/bin/fgrep                                           [ Warning ]
-    /usr/bin/file                                            [ OK ]
-    /usr/bin/find                                            [ OK ]
-    /usr/bin/fuser                                           [ OK ]
-    /usr/bin/grep                                            [ OK ]
-    /usr/bin/groups                                          [ OK ]
-    /usr/bin/head                                            [ OK ]
-    /usr/bin/id                                              [ OK ]
-    /usr/bin/ip                                              [ OK ]
-    /usr/bin/ipcs                                            [ OK ]
-    /usr/bin/kill                                            [ OK ]
-    /usr/bin/killall                                         [ OK ]
-    /usr/bin/last                                            [ OK ]
-    /usr/bin/lastlog                                         [ OK ]
-    /usr/bin/ldd                                             [ Warning ]
-    /usr/bin/less                                            [ OK ]
-    /usr/bin/locate                                          [ OK ]
-    /usr/bin/logger                                          [ OK ]
-    /usr/bin/login                                           [ OK ]
-    /usr/bin/ls                                              [ OK ]
-    /usr/bin/lsattr                                          [ OK ]
-    /usr/bin/lsmod                                           [ OK ]
-    /usr/bin/lsof                                            [ OK ]
-    /usr/bin/mail                                            [ OK ]
-    /usr/bin/md5sum                                          [ OK ]
-    /usr/bin/mktemp                                          [ OK ]
-    /usr/bin/mlocate                                         [ OK ]
-    /usr/bin/more                                            [ OK ]
-    /usr/bin/mount                                           [ OK ]
-    /usr/bin/mv                                              [ OK ]
-    /usr/bin/netstat                                         [ OK ]
-    /usr/bin/newgrp                                          [ OK ]
-    /usr/bin/passwd                                          [ OK ]
-    /usr/bin/perl                                            [ OK ]
-    /usr/bin/pgrep                                           [ OK ]
-    /usr/bin/ping                                            [ OK ]
-    /usr/bin/pkill                                           [ OK ]
-    /usr/bin/ps                                              [ OK ]
-    /usr/bin/pstree                                          [ OK ]
-    /usr/bin/pwd                                             [ OK ]
-    /usr/bin/readlink                                        [ OK ]
-    /usr/bin/rkhunter                                        [ OK ]
-    /usr/bin/runcon                                          [ OK ]
-    /usr/bin/sed                                             [ OK ]
-    /usr/bin/sh                                              [ OK ]
-    /usr/bin/sha1sum                                         [ OK ]
-    /usr/bin/sha224sum                                       [ OK ]
-    /usr/bin/sha256sum                                       [ OK ]
-    /usr/bin/sha384sum                                       [ OK ]
-    /usr/bin/sha512sum                                       [ OK ]
-    /usr/bin/size                                            [ OK ]
-    /usr/bin/sort                                            [ OK ]
-    /usr/bin/ssh                                             [ OK ]
-    /usr/bin/stat                                            [ OK ]
-    /usr/bin/strace                                          [ OK ]
-    /usr/bin/strings                                         [ OK ]
-    /usr/bin/su                                              [ OK ]
-    /usr/bin/sudo                                            [ OK ]
-    /usr/bin/tail                                            [ OK ]
-    /usr/bin/telnet                                          [ OK ]
-    /usr/bin/test                                            [ OK ]
-    /usr/bin/top                                             [ OK ]
-    /usr/bin/touch                                           [ OK ]
-    /usr/bin/tr                                              [ OK ]
-    /usr/bin/uname                                           [ OK ]
-    /usr/bin/uniq                                            [ OK ]
-    /usr/bin/users                                           [ OK ]
-    /usr/bin/vmstat                                          [ OK ]
-    /usr/bin/w                                               [ OK ]
-    /usr/bin/watch                                           [ OK ]
-    /usr/bin/wc                                              [ OK ]
-    /usr/bin/wget                                            [ OK ]
-    /usr/bin/whatis                                          [ OK ]
-    /usr/bin/whereis                                         [ OK ]
-    /usr/bin/which                                           [ Warning ]
-    /usr/bin/who                                             [ OK ]
-    /usr/bin/whoami                                          [ OK ]
-    /usr/bin/numfmt                                          [ OK ]
-    /usr/bin/kmod                                            [ OK ]
-    /usr/bin/systemd                                         [ OK ]
-    /usr/bin/systemctl                                       [ OK ]
-    /usr/bin/gawk                                            [ OK ]
-    /usr/bin/mail.mailutils                                  [ OK ]
-    /usr/bin/dash                                            [ OK ]
-    /usr/bin/x86_64-linux-gnu-size                           [ OK ]
-    /usr/bin/x86_64-linux-gnu-strings                        [ OK ]
-    /usr/bin/telnet.netkit                                   [ OK ]
-    /usr/bin/w.procps                                        [ OK ]
-    /usr/lib/systemd/systemd                                 [ OK ]
-    /etc/rkhunter.conf                                       [ Ok ]
-
-[Press <ENTER> to continue]
-
-Checking the network...
-
-  Performing checks on the network ports
-    Checking for backdoor ports                              [ None found ]
-    Checking for hidden ports                                [ Skipped ]
-
-  Performing checks on the network interfaces
-    Checking for promiscuous interfaces                      [ None found ]
-    Checking for packet capturing applications               [ Warning ]
-
-Checking the local host...
-
-  Performing system boot checks
-    Checking for local host name                             [ Found ]
-    Checking for system startup files                        [ Found ]
-    Checking system startup files for malware                [ None found ]
-
-  Performing group and account checks
-    Checking for passwd file                                 [ Found ]
-    Checking for root equivalent (UID 0) accounts            [ None found ]
-    Checking for passwordless accounts                       [ None found ]
-    Checking for passwd file changes                         [ None found ]
-    Checking for group file changes                          [ None found ]
-    Checking root account shell history files                [ OK ]
-
-  Performing system configuration file checks
-    Checking for an SSH configuration file                   [ Found ]
-    Checking if SSH root access is allowed                   [ Warning ]
-    Checking if SSH protocol v1 is allowed                   [ Warning ]
-    Checking for other suspicious configuration settings     [ None found ]
-    Checking for a running system logging daemon             [ Found ]
-    Checking for a system logging configuration file         [ Found ]
-    Checking if syslog remote logging is allowed             [ Not allowed ]
-
-  Performing filesystem checks
-    Checking /dev for suspicious file types                  [ None found ]
-    Checking for hidden files and directories                [ None found ]
-
-System checks summary
-=====================
-
-File properties checks...
-    Files checked: 141
-    Suspect files: 5
-
-Rootkit checks...
-    Rootkits checked : 502
-    Possible rootkits: 0
-
-Applications checks...
-    Applications checked: 3
-    Suspect applications: 0
-
-The system checks took: 6 minutes and 58 seconds
-
-All results have been written to the log file: /var/log/rkhunter.log
-
-One or more warnings have been found while checking the system.
-Please check the log file (/var/log/rkhunter.log)</pre>
-        </code>
-        <code>
-        <pre>
-You have new mail in /var/mail/root
-root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# vim /var/mail/root</pre>
-        </code>
-        <p>Log bisa di lihat di</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# vim /var/log/rkhunter.log</pre>
-        </code>
-
-        <p>Atau Pake Ini</p>
-        <code>
-          <pre>
-root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# cat /var/log/rkhunter.log | grep warning
-[21:18:08] Info: No mail-on-warning address configured</pre
-          >
-        </code>
-          <p>Alternative lain, perintahkan rkhunter untuk print warning ke layar</p>
-          <code>
-        <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none --rwo</pre>
-        </code>
-        <p>Tuning Konfigurasi RKHunter supaya lebih baik</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# vi /etc/rkhunter.conf</pre>
-        </code>
-
-        <p>Notifikasi email</p>
-        <code>
-          <pre>
-MAIL-ON-WARNING=your_user@gmail.com
-MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"</pre
-          >
-        </code>
-
-        <p>Atau</p>
-        <code>
-          <pre>
-MAIL-ON-WARNING=root@localhost
-MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"</pre
-          >
-        </code>
-
-        <p>Ijinkan Root Ssh Login, CONTOH</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# ALLOW_SSH_ROOT_USER=without-password</pre>
-        </code>
-
-        <p>Check</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -C</pre>
-        </code>
-        <p>TEST LAGI APAKAH ADA WARNING</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter -c --enable all --disable none --rwo</pre>
-        </code>
-        <p>Harusnya ada minimal 1 warning, karena konfigurasi rkhunter sudah di ubah,</p>
-        <code>
-          <pre>
-Warning:  The file properties have changed:
-          File: /etc/rkhunter.conf
-          Current hash: dc7c4508cf25c10daf1d056ee65d12edc7e9dc65235cb2cd384f66299fea01ea
-          Stored hash : 74704217e962b92824bef5e2481a06c32af2b6816df7854db66f696549e2ed8e
-          Current inode: 663421    Stored inode: 663418
-          Current size: 48668    Stored size: 48672
-          Current file modification time: 1648626399 (30-Mar-2022 07:46:39)
-          Stored file modification time : 1648624266 (30-Mar-2022 07:11:06)</pre>
-        </code>
-
-        <p>Update profile rkhunter</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# rkhunter --propupd</pre>
-        </code>
-        <p>Cek email untuk notifkasi dari rkhunter</p>
-
-        <p>Cron</p>
-        <code>
-          <pre>root@server-IDS-IPS:/usr/local/src/rkhunter-1.4.6# crontab -e</pre>
-        </code>
-        <p>KALAU TIDAK ADA MASALAH, MAKA TIDAK ADA EMAIL YANG AKAN DIKIRIM</p>
-      </section>
-
-      <section class="main-section" id="Installation_Nagios">
-        <header>NaGIOS</header>
-        <p>
-          Nagios is a popular open-source monitoring system. Nagios maintains an inventory of your servers and monitors them so you know your critical services are up and running. Using a monitoring system like Nagios is an essential tool
-          for any production environment, because by monitoring uptime, CPU usage, or disk space, you can prevent problems before they occur, or before your users contact you. Here we will install Nagios 4 and configure it so that we can
-          monitor host resources on the Nagios web interface. We will also setup the Nagios Remote Plugin Executor (NRPE), which will run as the remote host agent so that we can monitor its resources.
-        </p>
-
-        <header>Need</header>
-        <ul>
-          <li>Two Ubuntu 20.04 servers with root user privige. Firewall with ufw.</li>
-          <li>Servers with Nagios will be called Nagios servers.</li>
-          <li>Servers without Nagios will be called Ubuntu servers.</li>
-          <li>Nagios Server will run Apache and PHP.</li>
-          <li>Nagios Server is usually run behind a Firewall or VPN. If you run it on a Public IP, you have to be more serious about installing TLS/SSL etc. This tutorial assumes, Nagios server is behind Firewall.</li>
-        </ul>
-        <header>Installation Nagios 4 dan Memantau Server di Ubuntu 20.04</header>
-        <p>Dua VPCS Ubuntu 20.04 satu untuk server Nagios dan satu untuk klien Nagios.</p>
-        <p>Akses ke akun pengguna root (atau akses ke akun admin dengan hak akses root.</p>
-        <p>Biasa Nya Saya Sebelum Install NaGIOS Ubah Nama Server Dulu Menjadi server-nagios lalu reboot server nya</p>
-        <code>
-          <pre>
-arif@server-ubuntu:~$ sudo vim /etc/hostname 
-server-nagios</pre
-          >
-        </code>
-        <p>Langkah 1: Masuk ke Server & Perbarui Paket OS Server</p>
-        <code>
-          <pre>arif@server-nagios:~$ sudo apt-get update</pre>
-        </code>
-        <p>Langkah 2: Instal Dependensi yang Diperlukan</p>
-        <p>Sebelum memulai, Kita perlu menginstal beberapa dependensi yang diperlukan untuk menginstal Nagios di sistem Anda. Anda dapat menginstal semuanya dengan perintah berikut:</p>
-        <code>
-          <pre>
-arif@server-nagios:~$ sudo apt-get install autoconf bc gawk dc build-essential gcc libc6 make wget unzip apache2 php 
-libapache2-mod-php libgd-dev libmcrypt-dev make libssl-dev snmp libnet-snmp-perl gettext -y</pre
-          >
-        </code>
-        <p>Setelah semua dependensi diinstal, Anda dapat melanjutkan untuk mengunduh inti Nagios 4.</p>
-        <p>Langkah 3: Unduh dan Instal Nagios 4</p>
-        <p>Pertama, unduh versi terbaru Nagios 4 dari situs resminya menggunakan perintah berikut:</p>
-        <code>
-          <pre>
-arif@server-nagios:~$ wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.6.tar.gz
-arif@server-nagios:~$ ls
-nagios-4.4.6.tar.gz</pre
-          >
-        </code>
-        <p>Setelah unduhan selesai, ekstrak file yang diunduh dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~$ tar -xvzf nagios-4.4.6.tar.gz </pre>
-        </code>
-        <p>Selanjutnya, ubah direktori ke direktori yang diekstraksi dan konfigurasikan dengan perintah berikut:</p>
-        <code>
-          <pre>
-arif@server-nagios:~$ cd nagios-4.4.6/
-arif@server-nagios:~/nagios-4.4.6$ ./configure --with-httpd-conf=/etc/apache2/sites-enabled</pre
-          >
-        </code>
-        <p>Kita harus mendapatkan output berikut:</p>
-        <code>
-          <pre>
-*** Configuration summary for nagios 4.4.6 2020-04-28 ***:
-
-General Options:
--------------------------
-        Nagios executable:  nagios
-        Nagios user/group:  nagios,nagios
-      Command user/group:  nagios,nagios
-            Event Broker:  yes
-        Install ${prefix}:  /usr/local/nagios
-    Install ${includedir}:  /usr/local/nagios/include/nagios
-                Lock file:  /run/nagios.lock
-  Check result directory:  /usr/local/nagios/var/spool/checkresults
-          Init directory:  /lib/systemd/system
-  Apache conf.d directory:  /etc/apache2/sites-enabled
-            Mail program:  /bin/mail
-                  Host OS:  linux-gnu
-          IOBroker Method:  epoll
-
-Web Interface Options:
-------------------------
-                HTML URL:  http://localhost/nagios/
-                  CGI URL:  http://localhost/nagios/cgi-bin/
-Traceroute (used by WAP):  
-
-
-Review the options above for accuracy.  If they look okay,
-type 'make all' to compile the main program and CGIs.</pre
-          >
-        </code>
-        <p>Selanjutnya, buat nagios dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ make all</pre>
-        </code>
-        <p>Selanjutnya, buat pengguna dan grup Nagios dan tambahkan ke grup www-data dengan perintah berikut:</p>
-        <code>
-          <pre>
-arif@server-nagios:~/nagios-4.4.6$ sudo make install-groups-users 
-arif@server-nagios:~/nagios-4.4.6$ sudo usermod -a -G nagios www-data</pre
-          >
-        </code>
-        <p>Selanjutnya, jalankan perintah berikut untuk menginstal binari Nagios, daemon dan mode perintah:</p>
-        <code>
-          <pre>
-arif@server-nagios:~/nagios-4.4.6$ sudo make install 
-arif@server-nagios:~/nagios-4.4.6$ sudo make install-daemoninit 
-arif@server-nagios:~/nagios-4.4.6$ sudo make install-commandmode</pre
-          >
-        </code>
-        <p>Selanjutnya, instal contoh konfigurasi skrip dan konfigurasi web Apache menggunakan perintah berikut:</p>
-        <code>
-          <pre>
-arif@server-nagios:~/nagios-4.4.6$ sudo make install-config 
-arif@server-nagios:~/nagios-4.4.6$ sudo make install-webconf</pre
-          >
-        </code>
-        <p>Selanjutnya, aktifkan modul rewrite dan cgi dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo a2enmod rewrite cgi</pre>
-        </code>
-        <p>Selanjutnya, restart layanan Apache untuk menerapkan perubahan:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl restart apache2</pre>
-        </code>
-        <p>Langkah 4: Buat Pengguna Admin Nagios</p>
-        <p>Selanjutnya, Kita perlu membuat pengguna Nagios untuk mengakses antarmuka web Nagios. Kita dapat membuatnya dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin</pre>
-        </code>
-        <p>Kita akan diminta untuk mengatur kata sandi seperti yang ditunjukkan di bawah ini:</p>
-        <code>
-          <pre>
-New password: 
-Re-type new password: 
-Adding password for user arifadmin</pre
-          >
-        </code>
-        <p>Langkah 5: Konfigurasikan Nagios</p>
-        <p>Sebelum mengonfigurasi Nagios, Kita harus menginstal Plugin Nagios dan Plugin NRPE. Kita dapat menginstalnya dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo apt-get install monitoring-plugins nagios-nrpe-plugin -y</pre>
-        </code>
-        <p>Setelah semua paket diinstal, buat direktori untuk menyimpan semua konfigurasi:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo mkdir -p /usr/local/nagios/etc/servers</pre>
-        </code>
-        <p>Selanjutnya, edit file konfigurasi Nagios dan tentukan direktori server:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/nagios.cfg </pre>
-        </code>
-        <p>Buang Pagar nya #</p>
-        <p>Ubah baris berikut:</p>
-        <code>
-          <pre>cfg_dir=/usr/local/nagios/etc/servers</pre>
-        </code>
-        <p>Selanjutnya, edit Nagios resource.cfg dan tentukan jalur plugin Nagios:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/resource.cfg </pre>
-        </code>
-        <p>Yang ini kasih pagar -> #$USER1$=/usr/local/nagios/libexec</p>
-        <p>Ubah baris berikut:</p>
-        <code>
-          <pre>$USER1$=/usr/lib/nagios/plugins</pre>
-        </code>
-        <p>Simpan dan tutup file kemudian edit contacts.cfg dan tentukan nama kontak dan alamat email Anda:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/objects/contacts.cfg </pre>
-        </code>
-        <p>Ubah baris berikut sesuai kebutuhan Anda:</p>
-        <code>
-          <pre>
-define contact {
-
-contact_name            nagiosadmin             ; Short name of user
-use                     generic-contact         ; Inherit default values from generic-contact template (defined above)
-alias                   Nagios Admin            ; Full name of user
-email                   marifrizki27@gmail.com ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
-}</pre
-          >
-        </code>
-        <p>Simpan dan tutup file kemudian edit command.cfg dan tentukan perintah nrpe check:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo vim /usr/local/nagios/etc/objects/commands.cfg</pre>
-        </code>
-        <p>Tambahkan baris berikut di akhir file:</p>
-        <code>
-          <pre>
-define command{
-command_name check_nrpe
-command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
-}</pre
-          >
-        </code>
-        <p>Simpan dan tutup file kemudian mulai layanan Nagios dan aktifkan untuk memulai saat reboot sistem:</p>
-        <code>
-          <pre>
-arif@server-nagios:~/nagios-4.4.6$ sudo systemctl start nagios
-arif@server-nagios:~/nagios-4.4.6$ sudo systemctl enable nagios</pre
-          >
-        </code>
-        <p>Kita juga dapat memverifikasi status layanan Nagios dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl status nagios</pre>
-        </code>
-        <p>Output</p>
-        <code>
-          <pre>
-● nagios.service - Nagios Core 4.4.6
-     Loaded: loaded (/lib/systemd/system/nagios.service; enabled; vendor preset: enabled)
-     Active: active (running) since Sat 2022-03-26 22:21:00 UTC; 1min 12s ago
-       Docs: https://www.nagios.org/documentation
-    Process: 52032 ExecStartPre=/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg (co>
-    Process: 52038 ExecStart=/usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg (code=>
-   Main PID: 52040 (nagios)
-      Tasks: 6 (limit: 1073)
-     Memory: 2.8M
-     CGroup: /system.slice/nagios.service
-             ├─52040 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
-             ├─52041 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
-             ├─52042 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
-             ├─52043 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
-             ├─52044 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
-             └─52048 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
-
-Mar 26 22:21:00 server-nagios nagios[52040]: qh: Socket '/usr/local/nagios/var/rw/nagios.qh' success>
-Mar 26 22:21:00 server-nagios nagios[52040]: qh: core query handler registered
-Mar 26 22:21:00 server-nagios nagios[52040]: qh: echo service query handler registered
-Mar 26 22:21:00 server-nagios nagios[52040]: qh: help for the query handler registered
-Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Successfully registered manager as @wproc with q>
-Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52041;pid=520>
-Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52042;pid=520>
-Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52044;pid=520>
-Mar 26 22:21:00 server-nagios nagios[52040]: wproc: Registry request: name=Core Worker 52043;pid=520>
-Mar 26 22:21:02 server-nagios nagios[52040]: Successfully launched command file worker with pid 52048
-          </pre>
-        </code>
-        <p>Terakhir, restart layanan Apache untuk menerapkan perubahan:</p>
-        <code>
-          <pre>arif@server-nagios:~/nagios-4.4.6$ sudo systemctl restart apache2</pre>
-        </code>
-        <p>Langkah 6: Akses UI Web Nagios</p>
-        <p>Sekarang, buka browser web Kita dan akses antarmuka web Nagios menggunakan URL http://nagios-server-ip/nagios/. Anda akan diminta untuk memberikan username dan password admin seperti yang ditunjukkan di bawah ini:</p>
-        <img src="img/1.png" alt="login" width="800" class="rounded-circle img-thumbnail" />
-        <p>Berikan nama pengguna, kata sandi, dan kata sandi admin Nagios Kita dan klik tombol Masuk.</p>
-        <p>Kita akan melihat dasbor Nagios di halaman berikut:</p>
-        <img src="img/2.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>Klik pada service di panel kiri, Kita akan melihat semua layanan di halaman berikut:</p>
-        <img src="img/3.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>Langkah 7: Tambahkan Host Pemantauan ke Server Nagios</p>
-        <p>Selanjutnya, Kita perlu menginstal agen Nagios pada sistem klien dan menambahkannya ke server Nagios.</p>
-        <p>Pertama, instal paket Nagios dan NRPE pada sistem klien dengan perintah berikut:</p>
-        <p>Masuk Ke server Joomla</p>
-        <code>
-          <pre>arif@Testing:~$ ssh arif@192.168.100.88</pre>
-          <pre>arif@server-joomla:~$ sudo apt-get update</pre>
-          <pre>arif@server-joomla:~$ sudo apt-get install nagios-nrpe-server monitoring-plugins -y</pre>
-        </code>
-        <p>Setelah terinstal, edit file nrpe.cfg dan tentukan IP server Nagios dan IP CLient Anda:</p>
-        <code>
-          <pre>arif@server-joomla:~$ sudo vim /etc/nagios/nrpe.cfg</pre>
-        </code>
-        <p>Ubah baris berikut yang cocok dengan IP server dan klien Anda:</p>
-        <p>192.168.100.88 itu IP Client Joomla</p>
-        <p>192.168.100.118 itu IP Server Nagios:</p>
-        <code>
-          <pre>
-server_address=192.168.100.88
-allowed_hosts=127.0.0.1,::1,192.168.100.118</pre
-          >
-        </code>
-        <p>Simpan dan tutup file. Kemudian edit nrpe_local.cfg:</p>
-        <code>
-          <pre>arif@server-joomla:~$ sudo vim /etc/nagios/nrpe_local.cfg</pre>
-        </code>
-        <p>Tambahkan atau ubah baris berikut:</p>
-        <code>
-          <pre>
-command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
-command[check_ping]=/usr/lib/nagios/plugins/check_ping -H 192.168.100.88 -w 100.0,20% -c 500.0,60% -p 5
-command[check_http]=/usr/lib/nagios/plugins/check_http -I 192.168.100.88
-command[check_ssh]=/usr/lib/nagios/plugins/check_ssh -4 192.168.100.88</pre
-          >
-        </code>
-        <p>Simpan dan tutup file kemudian restart layanan Nagios NRPE dan aktifkan untuk memulai saat reboot sistem:</p>
-        <code>
-          <pre>
-arif@server-joomla:~$ sudo systemctl restart nagios-nrpe-server.service 
-arif@server-joomla:~$ sudo systemctl enable nagios-nrpe-server.service </pre
-          >
-        </code>
-        <p>Kita dapat memeriksa status layanan dengan perintah berikut:</p>
-        <code>
-          <pre>arif@server-joomla:~$ sudo systemctl status nagios-nrpe-server.service</pre>
-        </code>
-        <p>Output</p>
-        <code>
-          <pre>
-● nagios-nrpe-server.service - Nagios Remote Plugin Executor
-     Loaded: loaded (/lib/systemd/system/nagios-nrpe-server.service; enabled; vendor preset: enabled)
-     Active: active (running) since Sat 2022-03-26 23:41:57 UTC; 56s ago
-       Docs: http://www.nagios.org/documentation
-   Main PID: 28782 (nrpe)
-      Tasks: 1 (limit: 1071)
-     Memory: 744.0K
-     CGroup: /system.slice/nagios-nrpe-server.service
-             └─28782 /usr/sbin/nrpe -c /etc/nagios/nrpe.cfg -f
-
-Mar 26 23:41:57 server-joomla systemd[1]: Started Nagios Remote Plugin Executor.
-Mar 26 23:41:57 server-joomla nrpe[28782]: Starting up daemon
-Mar 26 23:41:57 server-joomla nrpe[28782]: Server listening on 192.168.100.88 port 5666.
-Mar 26 23:41:57 server-joomla nrpe[28782]: Listening for connections on port 5666
-Mar 26 23:41:57 server-joomla nrpe[28782]: Allowing connections from: 127.0.0.1,::1,192.168.100.118</pre
-          >
-        </code>
-        <p>Langkah 8: Tambahkan Host Klien ke Server Nagios</p>
-        <p>Selanjutnya, Kita perlu menambahkan host klien ke server Nagios dan menentukan layanan yang ingin Kita pantau.</p>
-        <p>Di server Nagios, buat file baru bernama nagiosclient.cfg:</p>
-        <p>Di Server NaGIOS</p>
-        <code>
-          <pre>arif@server-nagios:/usr/local/nagios/etc$ sudo vim /usr/local/nagios/etc/servers/nagiosclient.cfg</pre>
-          <pre>
-define host {
-      use                          linux-server
-      host_name                    nagiosclient
-      alias                        Ubuntu Host
-      address                      192.168.100.88
-      register                     1
-}
-
-define service {
-      host_name                       nagiosclient
-      service_description             PING
-      check_command                   check_nrpe!check_ping
-      max_check_attempts              2
-      check_interval                  2
-      retry_interval                  2
-      check_period                    24x7
-      check_freshness                 1
-      contact_groups                  admins
-      notification_interval           2
-      notification_period             24x7
-      notifications_enabled           1
-      register                        1
-}
-
-define service {
-      host_name                       nagiosclient
-      service_description             Check Users
-      check_command                   check_nrpe!check_users
-      max_check_attempts              2
-      check_interval                  2
-      retry_interval                  2
-      check_period                    24x7
-      check_freshness                 1
-      contact_groups                  admins
-      notification_interval           2
-      notification_period             24x7
-      notifications_enabled           1
-      register                        1
-}
-
-define service {
-      host_name                       nagiosclient
-      service_description             Check SSH
-      check_command                   check_nrpe!check_ssh
-      max_check_attempts              2
-      check_interval                  2
-      retry_interval                  2
-      check_period                    24x7
-      check_freshness                 1
-      contact_groups                  admins
-      notification_interval           2
-      notification_period             24x7
-      notifications_enabled           1
-      register                        1
-}
-
-define service {
-      host_name                       nagiosclient
-      service_description             Check Root / Disk
-      check_command                   check_nrpe!check_root
-      max_check_attempts              2
-      check_interval                  2
-      retry_interval                  2
-      check_period                    24x7
-      check_freshness                 1
-      contact_groups                  admins
-      notification_interval           2
-      notification_period             24x7
-      notifications_enabled           1
-      register                        1
-}
-
-define service {
-      host_name                       nagiosclient
-      service_description             Check HTTP
-      check_command                   check_nrpe!check_http
-      max_check_attempts              2
-      check_interval                  2
-      retry_interval                  2
-      check_period                    24x7
-      check_freshness                 1
-      contact_groups                  admins
-      notification_interval           2
-      notification_period             24x7
-      notifications_enabled           1
-      register                        1
-}
+PC1> ip 172.16.1.100/16 172.16.1.1
+PC1> ping 172.16.1.1
+PC1> ping 10.10.1.6
+PC1> ping 10.10.1.9
     </pre
           >
         </code>
-        <p>Simpan dan tutup file kemudian restart layanan Nagios untuk menerapkan perubahan:</p>
+        <p>CEK TABEL ROUTING DI MIKROTIK 1</p>
         <code>
           <pre>
-arif@server-nagios:/usr/local/nagios/etc$ sudo systemctl restart nagios
-arif@server-nagios:/usr/local/nagios/etc$ sudo systemctl status nagios</pre
+[admin@MikroTik] > /ip route print
+Flags: X - disabled, A - active, D - dynamic,
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+B - blackhole, U - unreachable, P - prohibit
+#      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+0 ADS  0.0.0.0/0                          192.168.122.1             1
+1 ADC  10.10.1.0/30       10.10.1.1       ether1                    0
+2 ADC  10.10.1.4/30       10.10.1.5       ether2                    0
+3 ADC  192.168.122.0/24   192.168.122.233 ether3                    0</pre
           >
         </code>
-        <p>Langkah 9: Verifikasi Nagios</p>
-        <p>Sekarang, kembali ke antarmuka web Nagios dan klik hosts di panel kiri, Kita akan melihat semua host klien yang baru ditambahkan di halaman berikut:</p>
-        <img src="img/4.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
-        <p>Sekarang, klik pada tab service di panel kiri, Kita akan melihat semua layanan di halaman berikut:</p>
-        <img src="img/5.png" alt="tampilan nagios" width="800" class="rounded-circle img-thumbnail" />
+        <p>CEK TABEL ROUTING DI MIKROTIK 2</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ip route print
+Flags: X - disabled, A - active, D - dynamic,
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+B - blackhole, U - unreachable, P - prohibit
+  #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+  0 ADC  10.10.1.4/30       10.10.1.6       ether1                    0
+  1 ADC  10.10.1.8/30       10.10.1.9       ether2                    0
+  2 ADC  172.16.0.0/16      172.16.1.1      ether3                    0</pre
+
+        <p>DI MIKROTIK 1</p> 
+        <code>
+          <pre>
+  [admin@MikroTik] > /routing ospf instance set name=default router-id=10.10.1.1 numbers=0
+  [admin@MikroTik] > /routing ospf instance enable numbers=0
+  [admin@MikroTik] > /routing ospf network add network=10.10.1.0/30 area=backbone
+  [admin@MikroTik] > /routing ospf network add network=10.10.1.4/30 area=backbone
+  
+  [admin@MikroTik] > /ip route print
+  Flags: X - disabled, A - active, D - dynamic,
+  C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+  B - blackhole, U - unreachable, P - prohibit
+   #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+   0 ADS  0.0.0.0/0                          192.168.122.1             1
+   1 ADC  10.10.1.0/30       10.10.1.1       ether1                    0
+   2 ADC  10.10.1.4/30       10.10.1.5       ether2                    0
+   3 ADo  10.10.1.8/30                       10.10.1.6               110
+   4 ADo  172.16.0.0/16                      10.10.1.6               110
+   5 ADC  192.168.122.0/24   192.168.122.233 ether3                    0
+        </pre>
+        </code>
+  
+        <p>DI MIKROTIK 2</p>
+        <code>
+          <pre>
+  [admin@MikroTik] > /routing ospf instance set name=default router-id=10.10.1.6 numbers=0
+  [admin@MikroTik] > /routing ospf instance enable numbers=0
+  [admin@MikroTik] > /routing ospf network add network=10.10.1.4/30 area=backbone
+  [admin@MikroTik] > /routing ospf network add network=10.10.1.8/30 area=backbone
+  [admin@MikroTik] > /routing ospf network add network=172.16.0.0/16 area=backbone
+  
+  [admin@MikroTik] > /ip route print
+  Flags: X - disabled, A - active, D - dynamic,
+  C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+  B - blackhole, U - unreachable, P - prohibit
+   #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+   0 ADo  10.10.1.0/30                       10.10.1.5               110
+   1 ADC  10.10.1.4/30       10.10.1.6       ether1                    0
+   2 ADC  10.10.1.8/30       10.10.1.9       ether2                    0
+   3 ADC  172.16.0.0/16      172.16.1.1      ether3                    0</pre>
+  </code>
+  
+  <p>COBA SADAP PAKE WIRESHARK</p> 
+  <p>BUKA WIRESHARK NYA DI GNS3</p> 
+  <p>NGASIH TAU KE SEMUA ROUTER KALO LEWAT SAYA BISA KE INTERNET</p> 
+  <p>WEBSITE > https://lms.onnocenter.or.id/wiki/index.php/Mikrotik:_OSPF_Sederhana_distribute_default_routing</p>
+  <p>COPY KAN KE MIKROTIK 1</p>
+  <code>
+    <pre>
+[admin@MikroTik] > /routing ospf instance set distribute-default=if-installed-as-type-1 numbers=0
+    </pre>
+  </code>
+
+  <p>SEKARANG COBA CEK DI MIKROTIK 2</p> 
+  <p>LIHAT SEKARANG PERTAMBAH >  0 ADo  0.0.0.0/0             10.10.1.5               110</p>
+  <code>
+    <pre>
+ARTINYA KALO MAU KE INTERNET LEWAT SAYA, LEWAT > 10.10.1.5
+[admin@MikroTik] > /ip route print
+Flags: X - disabled, A - active, D - dynamic,
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme,
+B - blackhole, U - unreachable, P - prohibit
+ #      DST-ADDRESS        PREF-SRC        GATEWAY            DISTANCE
+ 0 ADo  0.0.0.0/0                          10.10.1.5               110
+ 1 ADo  10.10.1.0/30                       10.10.1.5               110
+ 2 ADC  10.10.1.4/30       10.10.1.6       ether1                    0
+ 3 ADC  10.10.1.8/30       10.10.1.9       ether2                    0
+ 4 ADC  172.16.0.0/16      172.16.1.1      ether3                    0</pre>
+    </code>
+
+<p>COBA PING PAKE PC1</p> 
+    <code>
+      <pre>
+PC1> ping 10.10.1.1
+PC1> ping 192.168.100.1</pre>
+    </code>
+
+    <p>SEKARANG TAMBAHKAN MIKROTIK 3 DAN PC2 NYA DI GNS3</p>
+    <p>WEBSITE > https://lms.onnocenter.or.id/wiki/index.php/Mikrotik:_OSPF_Sederhana</p>
+    <p>Sambungan</p>
+    <code>
+      <pre>
+- R3:
+- eth0: -- R1: eth0
+- eth1: -- R2: eth1
+- eth2: -- LAN 192.168.1.1/24</pre>
+    </code>
+    <p>
+DAN START JALANKAN MIKROTIK 3 DAN PC2</p> 
+
+    <p>CEK IP MIKROTIK 3</p> 
+    <code>
+      <pre>
+[admin@MikroTik] > /ip address print
+Flags: X - disabled, I - invalid, D - dynamic
+#   ADDRESS            NETWORK         INTERFACE                              
+    </pre>
+    </code>
+
+    <p>COPY KAN DI MIKROTIK 3</p> 
+    <code>
+      <pre>
+[admin@MikroTik] > /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                              
+    </pre>
+    </code>
+
+    <p>COPY KAN DI MIKROTIK 3 </p>
+    <code>
+      <pre>
+[admin@MikroTik] > /ip address add address=10.10.1.2/30 interface=ether1  
+[admin@MikroTik] > /ip address add address=10.10.1.10/30 interface=ether2
+[admin@MikroTik] > /ip address add address=192.168.1.1/24 interface=ether3
+    </pre>
+    </code>
+
+    <p>CEK IP MIKROTIK 3</p>
+    <code>
+      <pre>
+[admin@MikroTik] > /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                              
+ 0   10.10.1.2/30       10.10.1.0       ether1                                 
+ 1   10.10.1.10/30      10.10.1.8       ether2                                 
+ 2   192.168.1.1/24     192.168.1.0     ether3</pre> 
+    </code>
+
+    <p>DI PC2</p> 
+    <code>
+      <pre>
+PC2> ip 192.168.1.100/24 192.168.1.1 
+PC2> ping 10.10.1.10
+    </pre>
+    </code>
+
+    <p>DI MIKROTIK 3 COPY KAN</p>
+    <code>
+      <pre>
+[admin@MikroTik] > /routing ospf instance set name=default router-id=10.10.1.2 numbers=0
+[admin@MikroTik] > /routing ospf instance enable numbers=0
+[admin@MikroTik] > /routing ospf network add network=10.10.1.0/30 area=backbone 
+[admin@MikroTik] > /routing ospf network add network=10.10.1.8/30 area=backbone 
+[admin@MikroTik] > /routing ospf network add network=192.168.1.0/24 area=backbone</pre>
+    </code>
+
+    <p>CEK DI MIKROTIK 3</p>
+    <p>SEKARANG UDAH DAPET TABEL ROUTING NYA</p>
+    <code>
+      <pre>
+[admin@MikroTik] > /ip route print 
+Flags: X - disabled, A - active, D - dynamic, 
+C - connect, S - static, r - rip, b - bgp, o - ospf, m - mme, 
+B - blackhole, U - unreachable, P - prohibit 
+    </pre>
+    </code>
       </section>
 
-      <section class="main-section" id="Open_VPN_IPv4">
-        <header>Open VPN IPv4</header>
-        <p>
-          OpenVPN is a virtual private network (VPN) system that implements techniques to create secure point-to-point or site-to-site connections in routed or bridged configurations and remote access facilities. It implements both client
-          and server applications.
-        </p>
-        <p>
-          OpenVPN allows peers to authenticate each other using pre-shared secret keys, certificates or username/password. When used in a multiclient-server configuration, it allows the server to release an authentication certificate for
-          every client, using signatures and certificate authority.
-        </p>
-        <p>
-          It uses the OpenSSL encryption library extensively, as well as the TLS protocol, and contains many security and control features. It uses a custom security protocol[11] that utilizes SSL/TLS for key exchange. It is capable of
-          traversing network address translators (NATs) and firewalls.
-        </p>
-        <p>OpenVPN has been ported and embedded to several systems. For example, DD-WRT has the OpenVPN server function. SoftEther VPN, a multi-protocol VPN server, also has an implementation of OpenVPN protocol.</p>
-        <p>It was written by James Yonan and is free software, released under the terms of the GNU General Public License version 2 (GPLv2). [12] Additionally, commercial licenses are available.</p>
-
-        <header>Install Open VPN Dan Menggunakan</header>
-        <p>OpenVPN Instalasi di Ubuntu 20.04.</p>
-        <p>INSTALL OPENVPN DI SERVER</p>
-        <p>YANG BAGUS BUAT VPN ITU PAKE (IPSEC DAN OPENVPN) JANGAN PAKE PPTP DAN I2TP KARENA PAKE USERNAME DAN PASSWORD GA PAKE ENKRIPSI</p>
-
-        <p>Step 1 Update system</p>
+      <section class="main-section" id="Advanced_Routing_OSPF_BGP_With_Cisco">
+        <header>Advanced Routing OSPF BGP Cisco</header>
+        <p>SEKARANG MENGGUNAKAN PAKE CISCO</p> 
+        <p>Cisco: BGP Sederhana tanpa filter</p>
+        <p>TUTORIAL > https://lms.onnocenter.or.id/wiki/index.php/Cisco</p>
+        <p>TUTORIAL > https://lms.onnocenter.or.id/wiki/index.php/Cisco:_BGP_Sederhana_tanpa_filter</p>
+        <p>PAKE CISCO c3600</p>
+        <p>MASUKAN PC1 PC2 PC3</p> 
+        <p>JALANKAN DULU CISCO NYA</p> 
+        <p>KALO UDAH START MASUK KE CONSOLE NYA CISCO 1</p>
+        <p>MASUKAN PERINTAH SEPERTI INI ENTER DAN ENTER LAGI</p>
+        <p>COPY KAN INI DI R1</p>
+        <p>Setup connection</p>
+        <p>ISP1</p> 
         <code>
           <pre>
-root@server:/home/arif# sudo apt update
-root@server:/home/arif# sudo apt upgrade</pre
-          >
-        </code>
+enable
+configure terminal
+  interface Ethernet 1/0
+    ip address 192.168.1.1 255.255.255.0
+    no shutdown
+    exit
+  interface Ethernet 1/1
+    ip address 192.168.3.1 255.255.255.0
+    no shutdown
+    exit
+  interface Ethernet 1/2
+    ip address 10.100.100.1 255.255.255.0
+    no shutdown
+    exit
+  interface Ethernet 1/3
+    ip address 10.100.200.1 255.255.255.0
+    no shutdown
+    exit
+  end</pre>
+  </code>
 
-        <p>Step 2 – Cek IP address</p>
-        <code>
-          <pre>
-root@server:/home/arif# ip a
-root@server:/home/arif# ip link
-root@server:/home/arif# ifconfig wlx1cbfce9982b7 172.16.100.12 netmask 255.255.255.0</pre
-          >
-        </code>
+    <p>COPY KAN DI R2</p> 
+    <p>ISP2</p> 
+    <code>
+    <pre>
+enable
+configure terminal
+  interface Ethernet1/0
+  ip address 192.168.2.1 255.255.255.0
+  no shutdown
+  exit
+interface Ethernet1/1
+  ip address 192.168.3.2 255.255.255.0
+  no shutdown
+  exit
+interface Ethernet1/2
+  ip address 10.10.10.1 255.255.255.0
+  no shutdown
+  exit
+interface Ethernet1/3
+  ip address 10.10.20.1 255.255.255.0
+  no shutdown
+  exit
+end</pre>
+    </code>
 
-        <p>Step 3 – Download & run openvpn-install.sh script</p>
-        <p>Pastikan tidak ada yang menggunakan repository ubuntu</p>
-        <code>
-          <pre>root@server:/home/arifsudo rm -Rf /var/lib/dpkg/lock</pre>
-        </code>
+    <p>COBA PING KE R1</p> 
+    <p>INI DI R3</p>
+    <code>
+      <pre>
+R3#ping 192.168.1.1
+R3#ping 192.168.2.1
+R3#ping 192.168.2.1
+R3#ping 192.168.2.3</pre>
+    </code>
 
-        <p>Download Open VPN</p>
-        <code>
-          <pre>
-root@server:/home/arif# chmod 644 /usr/local/src/
-root@server:/home/arif# cd /usr/local/src/
-root@server:/usr/local/src# wget https://git.io/vpn -O openvpn-install.sh
-root@server:/usr/local/src# chmod +x openvpn-install.sh</pre
-          >
-        </code>
+    <p>SEKARANG MASUK KE CONSOLE NYA PC1</p> 
+    <code>
+      <pre>
+PC1> ip 10.100.100.100/24 10.100.100.1
+PC1> ping 10.100.100.1    
+PC1> ping 192.168.1.1 
+PC1> ping 192.168.3.1</pre>
+    </code>
 
-        <p>Jalankan</p>
-        <code>
-          <pre>root@server:/usr/local/src# sudo ./openvpn-install.sh</pre>
-        </code>
-        <code>
-          <pre>
-Welcome to this OpenVPN road warrior installer!
-Which IPv4 address should be used?
-1) 192.168.100.21
-2) 172.16.100.12
-IPv4 address [1]: 1</pre
-          >
-        </code>
+    <p>SEKARANG MASUK KE CONSOLE NYA PC2</p> 
+    <code>
+      <pre>
+PC2> ip 10.10.10.100/24 10.10.10.1</pre>
+      </code>
 
-        <code>
-          <pre>
-This server is behind NAT. What is the public IPv4 address or hostname?
-Public IPv4 address / hostname [180.254.68.214]: 192.168.100.21
-Which protocol should OpenVPN use?
-      1) UDP (recommended)
-      2) TCP
-      Protocol [1]: 1</pre
-          >
-        </code>
-        <code>
-          <pre>
-What port should OpenVPN listen to?
-Port [1194]: 2500
+    <p>BGP Peering</p>
+    <p>ISP1</p>
+    <p>DI R1</p>
+    <code>
+      <pre>
+enable
+configure terminal
+  router bgp 10
+  bgp router-id 192.168.1.1
+    ! address-family ipv4 unicast 
+    network 10.100.100.0 mask 255.255.255.0
+    network 10.100.200.0 mask 255.255.255.0
+    neighbor 192.168.3.2 remote-as 20
+    neighbor 192.168.1.2 remote-as 30
+    neighbor 192.168.3.2 activate 
+    neighbor 192.168.1.2 activate 
+    ! neighbor 192.168.3.2 default-originate 
+    ! neighbor 192.168.1.2 default-originate
+  end</pre>
+    </code>
 
-Select a DNS server for the clients:
-      1) Current system resolvers
-      2) Google
-      3) 1.1.1.1 # <- YANG INI JUGA OKE
-      4) OpenDNS
-      5) Quad9
-      6) AdGuard
-DNS server [1]: 1
-Enter a name for the first client:
-Name [client]: yoai-testing
-Press any key to continue...
-ENTER</pre
-          >
-        </code>
+    <p>ISP2</p>
+    <p>DI R2</p> 
 
-        <p>Check</p>
-        <code>
-          <pre>
-root@server:/usr/local/src# cd /root/
-root@server:~# mv yoai-testing.ovpn /home/arif/</pre
-          >
-        </code>
+    <code>
+      <pre>
+enable
+configure terminal
+  router bgp 20
+  bgp router-id 192.168.2.1
+    ! address-family ipv4 unicast
+    network 10.10.10.0 mask 255.255.255.0
+    network 10.10.20.0 mask 255.255.255.0
+    neighbor 192.168.3.1 remote-as 10
+    neighbor 192.168.2.2 remote-as 30
+    neighbor 192.168.3.1 activate 
+    neighbor 192.168.2.2 activate 
+  end</pre>
+  </code>
 
-        <p>COBA JGN GANTI USER KALO GA BISA PAKE DI BAWAH INI</p>
-        <code>
-          <pre>root@server:~# chown arif: /home/arif/yoai-testing.ovpn # <- JGN PAKE INI</pre>
-        </code>
+    <p>ISP3</p>
+    <p>DI R3</p> 
+    <code>
+      <pre>
+enable
+configure terminal
+  router bgp 30
+  bgp router-id 192.168.1.2
+    ! address-family ipv4 unicast
+    network 10.1.1.0 mask 255.255.255.0
+    network 10.1.2.0 mask 255.255.255.0
+    neighbor 192.168.1.1 remote-as 10
+    neighbor 192.168.2.1 remote-as 20
+    neighbor 192.168.1.1 activate
+    neighbor 192.168.2.1 activate  
+  end</pre>
+    </code>
 
-        <p>Step 4 – Connect an OpenVPN server using IOS/Android/Linux/Windows client</p>
-        <p>Copykan file sertifikat client.ovpn ke client, misalnya menggunakan perintah,</p>
-        <code>
-          <pre>
-root@parrot:~# scp -P3000 arif@192.168.100.21:*ovpn .
-root@parrot:~# sudo openvpn --config yoai-testing.ovpn</pre
-          >
-        </code>
+    <p>CEK DI R3</p> 
+    <p>R3#show bgp all</p>
+    <code>
+      <pre> 
+For address family: IPv4 Unicast
+BGP table version is 9, local router ID is 192.168.1.2
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale
+Origin codes: i - IGP, e - EGP, ? - incomplete
 
-        <p>Linux Desktop: OpenVPN client configuration</p>
-        <p>Install</p>
-        <code>
-          <pre>root@parrot:~# sudo apt -y install openvpn</pre>
-        </code>
+   Network          Next Hop            Metric LocPrf Weight Path
+*> 10.1.1.0/24      0.0.0.0                  0         32768 i
+*> 10.1.2.0/24      0.0.0.0                  0         32768 i
+*> 10.10.10.0/24    192.168.2.1              0             0 20 i
+*> 10.10.20.0/24    192.168.2.1              0             0 20 i
+*  10.100.100.0/24  192.168.2.1                            0 20 10 i
+*>                  192.168.1.1              0             0 10 i
+*  10.100.200.0/24  192.168.2.1                            0 20 10 i
+*>                  192.168.1.1              0             0 10 i</pre>
+  </code>
 
-        <p>Jalankan</p>
-        <p>KALO ngga PAKE INI BISA</p>
-        <code>
-          <pre>root@parrot:~# sudo --client --config yoai-testing.ovpn</pre>
-        </code>
+    <p>CEK</p>
+    <code>
+      <pre>
+R3#show bgp ipv4 unicast neighbors</pre>
+    </code>
 
-        <p>Step 5 - Verify/test the connectivity</p>
-        <code>
-          <pre>
-Execute the following commands after connecting to OpenVPN server from your Linux desktop:
-ping 10.8.0.1       # Ping to the OpenVPN server gateway
-ip route            # Make sure routing setup working
-dig TXT +short o-o.myaddr.l.google.com @ns1.google.com #Must return public IP address of OpenVPN server</pre
-          >
-        </code>
-
-        <p>Beberapa catatan troubleshooting OpenVPN & Client</p>
-        <p>Cek OpenVPN server for errors:</p>
-        <code>
-          <pre>journalctl --identifier ovpn-server</pre>
-        </code>
-
-        <p>Cek Filewall Rules</p>
-        <code>
-          <pre>
-cat /etc/rc.local
-#!/bin/sh -e
-iptables -t nat -A POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to 172.26.6.74
-exit 0</pre
-          >
-        </code>
-
-        <p>Alternatif lain, run iptables command & sysctl command untuk verifikasi NAT rule setup</p>
-        <code>
-          <pre>
-sudo iptables -t nat -L -n -v
-sysctl net.ipv4.ip_forward
-Insert rules ke /etc/rc.local (kalau belum di insert)</pre
-          >
-        </code>
-
-        <code>
-          <pre>
-sudo sh /etc/rc.local
-sudo sysctl -w net.ipv4.ip_forward=1</pre
-          >
-        </code>
-        <p>Is OpenVPN server running and port is open? Use the ss command or netstat command and pidof command/ps command:</p>
-
-        <code>
-          <pre>
-$ netstat -tulpn | grep :1194 ## 1194 is the openvpn server port ##
-$ ss -tulpn | grep :1194 ## 1194 is the openvpn server port ##
-$ ps aux | grep openvpn ## is the openvpn server running? ##
-$ ps -C openvpn ## is the openvpn server running? ##
-$ pidof openvpn ## find the openvpn server PID ##</pre
-          >
-        </code>
-        <p>Verify that OpenVPN server runnign and Port is Open on ubuntu Linux If not running, restart the OpenVPN server:</p>
-        <code>
-          <pre>
-$ sudo systemctl restart openvpn@server
-Look out for errors:
-$ sudo systemctl status openvpn@server</pre
-          >
-        </code>
-        <p>Can the Linux desktop client connect to the OpenVPN server machine? First you need to run a simple test to see if the</p>
-        <p>OpenVPN server port (UDP 1194) accepts connections:</p>
-
-        <code>
-          <pre>
-$ nc -vu 104.20.187.5 1194
-Connection to 104.20.187.5 1194 port [udp/openvpn] succeeded!</pre
-          >
-        </code>
+    <p>CARA CEK</p>
+    <code>
+      <pre>
+show ip route
+show ip bgp 10.100.1000.0/24
+show ip bgp neighbors 192.168.2.2 advertised-routes
+show ip bgp neighbor 192.168.1.1 routes
+show bgp ipv4 unicast neighbors 
+show bgp ipv4 unicast summary</pre>
+      </code>
       </section>
     </main>
   </body>

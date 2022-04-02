@@ -15,12 +15,12 @@ body {
 main header,
 nav header {
   font-weight: 700;
-  font-size: 1.5em;
+  font-size: 2em;
 }
 
 /* Nav */
 nav {
-  border-right: 3px solid #333;
+  border-right: 7px solid rgb(53, 53, 53);
   width: 1000px;
 }
 
@@ -30,10 +30,10 @@ nav header {
 
 nav a {
   display: block;
-  border-top: 1px solid #333;
+  border-top: 4px solid rgb(22, 22, 22);
   padding: 15px;
   text-decoration: none;
-  color: #333;
+  color: rgb(8, 8, 8);
 }
 
 /* Main */
@@ -46,7 +46,7 @@ main {
 
 code pre {
   background-color: rgb(122, 122, 122);
-  width: 1050px;
+  width: 800px;
   padding: 20px;
 }
 
@@ -57,7 +57,7 @@ code pre {
   }
 
   nav {
-    border-bottom: 3px solid #333;
+    border-bottom: 3px solid rgb(43, 43, 43);
     overflow-y: scroll;
     height: 300px;
   }
