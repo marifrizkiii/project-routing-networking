@@ -12,6 +12,7 @@
     <nav id="navbar">
       <header>My Documents Routing Networking</header>
       <a href="#Network_Security" class="nav-link">Network Security</a>
+      <a href="#IPv6_Routing_Sederhana_Dengan_Mikrotik" class="nav-link">IPv6 Routing Sederhana Dengan Mikrotik</a>
       <a href="#Advanced_Routing_OSPF_BGP_With_Mikrotik" class="nav-link">Advanced Routing OSPF-BGP With Mikrotik</a>
       <a href="#Advanced_Routing_OSPF_BGP_With_Cisco" class="nav-link">Advanced Routing OSPF-BGP With Cisco</a>
     </nav>
@@ -39,6 +40,637 @@
           Data between the two points is encrypted and the user would need to authenticate to allow communication between their device and the network. 
           Forcepoint's Secure Enterprise SD-WAN allows organizations to quickly create VPNs using drag-and-drop and to protect all locations with our Next Generation Firewall solution.</p>
       </section>
+
+      <section class="main-section" id="IPv6_Routing_Sederhana_Dengan_Mikrotik">
+      <header>IPv6 Routing Sederhana Dengan Mikrotik</header>
+        <p>PAKE NAT1</p>
+        <p>DAN PAKE MIKOTIK</p>
+        <p>PAKE KALI LINUX</p>
+        <p>1. SAMBUNGKAN > MIKROTIK KABEL ENTHERNET0 KE > NAT1 nat0</p>
+        <p>2. SAMBUNGKAN > KALI LINUX KABEL ENTHERNET0 KE > MIKROTIK KE ENTHERNET4</p>
+        <p>BIAR AMAN SSH KE MIKROTIK</p>
+        <p>CHECK IP MIKROTIK NYA</p>
+        <p>Mikrotik: console SSH</p>
+        <p>Untuk bisa mengakses Mikrotik menggunakan SSH</p>
+        <p>Ubuntu Client</p>
+        <p>Edit</p>
+        <code>
+          <pre>arif@Testing:~$ sudo nvim /etc/ssh/ssh_config</pre>
+        </code>
+
+        <p>Buang Pagar # Nya</p>
+        <code>
+          <pre>Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc</pre>
+        </code>
+        <p>ssh ke Mikrotik</p>
+        <code>
+          <pre>
+arif@Testing:~$ ssh -o KexAlgorithms=diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-dss admin@192.168.122.103
+          </pre>
+        </code>
+        <p>SEKARANG CHECK DI KALI LINUX, KALI LINUX NYA BELUM DAPET IP KARENA MIKROTIK NYA BELUM DI ROUTING JADI ROUTER</p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 02-35-18.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>RESET CONFIGURATION DULU SUPAYA BENER-BENER KOSONG</p>
+        <code>
+          <pre>[admin@MikroTik] > /system reset-configuration</pre>
+        </code>
+        <p>DI DESKTOP AKAN PUTUS CONNECTION NYA</p>
+        <p>MASUKAN PASSWORD NYA YANG BARU DI MIKOTIK CARA MASUK NYA PAKE SSH</p>
+        <p>CHECK, KELIHATAN NYA INTERFACE NYA MASIH ADA SATU</p>
+        <code>
+          <pre>[admin@MikroTik] > /interface print 
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+ #     NAME                                TYPE       ACTUAL-MTU L2MTU  MAX-L2MTU
+ 0  R  ether1                              ether            1500
+ 1  R  ether2                              ether            1500
+ 2  R  ether3                              ether            1500
+ 3  R  ether4                              ether            1500
+ 4  R  ether5                              ether            1500
+ 5  R  ether6                              ether            1500
+ 6  R  ether7                              ether            1500
+ 7  R  ether8                              ether            1500
+</pre>
+        </code>
+        <p>CHECK IPv4</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                             
+ 0 D 192.168.122.103/24 192.168.122.0   ether1
+          </pre>
+        </code>
+        <p>AKTIFKAN DULU IPv6 NYA</p>
+        <p>KELIHATAN ipv6 NYA X ARTI NYA BELUM AKTIF</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                                            
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5 </pre>
+        </code>
+        <p>CARA AKTIFKAN IPv6</p>
+        <p>PERHATIKAN DI ATAS NOMOR 3 X IPv6 NYA</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package enable numbers=3</pre>
+        </code>
+        <p>CHECK LAGI</p>
+        <code>
+          <pre> 
+[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                     scheduled for enable   
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5    
+</pre>
+        </code>
+        <p>scheduled for enable BERARTI MINTA DI REBOOT DULU MIKROTIK NYA</p>
+        <code>
+          <pre>[admin@MikroTik] > /system reboot </pre>
+        </code>
+        <p>CHECK, SEKARANG SUDAH AKTIF IPv6 NYA</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 address print 
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local 
+ #    ADDRESS                                     FROM-... INTERFACE        ADV
+ 0 DL fe80::a00:27ff:fe20:7549/64                          ether5           no 
+ 1 DL fe80::a00:27ff:fe6e:55ae/64                          ether1    </pre>
+        </code>
+        <p>CHECK IPv6, MASIH BELUM DAPET IPv6 NYA</p>
+        <p>Membuat router IPv6 sederhana</p>
+        <code>
+          <pre> # LAN Bridge
+/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+add bridge=bridge1 interface=ether4
+add bridge=bridge1 interface=ether5
+add bridge=bridge1 interface=ether6
+add bridge=bridge1 interface=ether7
+add bridge=bridge1 interface=ether8
+</pre>
+        </code>
+        <p>CHECK, LIHAT PALING BAWAH NOMOR 8 bridge1 SUDAH NYALA</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /interface print 
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+ #     NAME                                TYPE       ACTUAL-MTU L2MTU  MAX-L2MTU
+ 0  R  ether1                              ether            1500
+ 1  RS ether2                              ether            1500
+ 2  RS ether3                              ether            1500
+ 3  RS ether4                              ether            1500
+ 4  RS ether5                              ether            1500
+ 5  RS ether6                              ether            1500
+ 6  RS ether7                              ether            1500
+ 7  RS ether8                              ether            1500
+ 8  R  bridge1                             bridge           1500 65535
+</pre>
+        </code>
+        <p> Disable RA di semua interface</p>
+        <code>
+          <pre>[admin@MikroTik] > /ipv6 nd set [ find default=yes ] disabled=yes</pre>
+        </code>
+        <p>LIHAT MASIH fe80 DOANG</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 address print 
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local 
+ #    ADDRESS                                     FROM-POOL INTERFACE                      ADVERTISE
+ 0 DL fe80::a00:27ff:fe6e:55ae/64                           ether1                         no       
+ 1 DL fe80::a00:27ff:fe69:615c/64                           bridge1                        no  
+</pre>
+        </code>
+        <p>LAN SETUP</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 address add address=2002:1234:5678::1/64 interface=bridge1 advertise=yes 
+</pre>
+        </code>
+        <p>CHECK LAGI, INI BISA DI advertise INI AKAN BISA DI REQUEST SAMA CLIENT-CLIENT DI JARINGAN</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 address print 
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local 
+ #    ADDRESS                                     FROM-POOL INTERFACE                      ADVERTISE
+ 0 DL fe80::a00:27ff:fe6e:55ae/64                           ether1                         no       
+ 1 DL fe80::a00:27ff:fe69:615c/64                           bridge1                        no       
+ 2  G 2002:1234:5678::1/64                                  bridge1                        yes  
+</pre>
+        </code>
+        <p>CHECK nd NYA, TAPI MASIH DISABLE </p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 nd print 
+Flags: X - disabled, I - invalid, * - default 
+ 0 X* interface=all ra-interval=3m20s-10m ra-delay=3s mtu=unspecified reachable-time=unspecified 
+      retransmit-interval=unspecified ra-lifetime=30m hop-limit=unspecified 
+      advertise-mac-address=yes advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no 
+</pre>
+        </code>
+        <p>MENGAKTIFKAN nd DI INTERFACE BUAT bridge1 DOANG</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 nd add interface=bridge1 ra-interval=20s-60s
+</pre>
+        </code>
+        <p>CHECK SUDAH ADA DUA nd nya</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ipv6 nd print 
+Flags: X - disabled, I - invalid, * - default 
+ 0 X* interface=all ra-interval=3m20s-10m ra-delay=3s mtu=unspecified reachable-time=unspecified 
+      retransmit-interval=unspecified ra-lifetime=30m hop-limit=unspecified 
+      advertise-mac-address=yes advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no 
+
+ 1    interface=bridge1 ra-interval=20s-1m ra-delay=3s mtu=unspecified reachable-time=unspecified 
+      retransmit-interval=unspecified ra-lifetime=30m hop-limit=unspecified 
+      advertise-mac-address=yes advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no
+</pre>
+        </code>
+        <p>LIHAT DI KALI LINUX SUDAH ADA IPv6 NYA YANG PENTING SCOPE GLOBAL</p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 16-19-04.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>COBA PING KE MIKROTIK, PASTIKAN NYAMBUNG KE MIKROTIK NYA </p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-17-23.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG DI GNS3 NYA TAMBAHKAN SERVER KORBAN</p>
+        <img src="img-routing/1.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SAMBUNG Ethernet0 > KE MIKROTIK DI Ethernet6</p>
+        <img src="img-routing/2.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>JALANKAN SERVER NYA APAKAH DAPET IP</p>
+        <p>CHECK DI SERVER ifconfig</p>
+        <img src="img-routing/3.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG IPv4</p>
+        <p>INI MASIH MIKROTIK YANG SAMA JADI IPv6 UDAH JALAN TINGGAL IPv4</p>
+        <code>
+          <pre>/ip address add interface=bridge1 address=192.168.100.1/24
+/ip route add gateway=bridge1
+
+/ip dns set servers=1.1.1.1
+/ip dns set allow-remote-request=yes
+ 
+/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
+/ip firewall nat print
+</pre>
+        </code>
+        <p> Setup DHCP Server dapat menggunakan</p>
+        <code>
+          <pre> 
+[admin@MikroTik] > /ip dhcp-server setup
+</pre>
+        </code>
+        <p>Check saat konfigurasi DHCP Server</p>
+        <code>
+          <pre>Select interface to run DHCP server on 
+
+dhcp server interface: bridge1
+Select network for DHCP addresses 
+
+dhcp address space: 192.168.100.0/24
+Select gateway for given network 
+
+gateway for dhcp network: 192.168.100.1
+Select pool of ip addresses given out by DHCP server 
+
+addresses to give out: 192.168.100.100-192.168.100.200
+Select DNS servers 
+
+dns servers: 192.168.122.1
+Select lease time 
+
+lease time: 10m
+</pre>
+        </code>
+        <p>Aktifkan DHCP Server, INI AKTIF</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /ip dhcp-server print
+Flags: D - dynamic, X - disabled, I - invalid 
+ #    NAME             INTERFACE           RELAY           ADDRESS-POOL           LEASE-TIME ADD-ARP
+ 0    dhcp1            bridge1                             dhcp_pool0             10m </pre>
+        </code>
+        <p>1. SEKARANG CHECK DI KALI LINUX DAPET IPv4 NGGA?</p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 16-47-45.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>2. SEKARANG CHECK DI SERVER KORBAN DAPET IPv4 NGGA?</p>
+        <p>3. DAN PASTIKAN IPv6 NYA DI SERVER KORBAN SUDAH DAPET</p>
+        <img src="img-routing/4.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>COBA CHECK DI KALI LINUX BROWSER</p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 17-16-14.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG TAMBAHKAN MIKROTIK 1 BIJI LAGI JADI ADA DUA ROUTER</p>
+        <img src="img-routing/5.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SAMBUNG MIKROTIK2 KE KABEL > Ethernet0 KE > MIKROTIK1 Ethernet2</p>
+        <img src="img-routing/6.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG PUTUS SAMBUNGAN KALI LINUX PINDAHKAN DI BAWAH MIKROTIK2</p>
+        <img src="img-routing/7.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>JADI UJI EXPERIMEN BISA NGGA KIRA-KIRA KALI LINUX NYAMBUNG KE SERVER KORBAN?</p>
+        <p>SEKARANG JALANKAN MIKROTIK2 NYA</p>
+        <p>RESET DULU MIKROTIK NYA</p>
+        <code>
+          <pre>/system reset-configuration
+</pre>
+        </code>
+        <p>CHECK IP MIKROTIK2 NYA</p>
+        <p>MASUK PAKE TELNET</p>
+        <p>CHECK IPv6 NYA BELUM AKTIF, AKTIFKAN DULU</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                                            
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5    
+ </pre>
+        </code>
+        <p>AKTIFKAN IPv6 NYA</p>
+        <code>
+          <pre>
+[admin@MikroTik] > /system package enable numbers=3</pre>
+        </code>
+        <p>CHECK LAGI SUDAH AKTIF TAPI REBOOT DULU</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                     scheduled for enable   
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5    
+</pre>
+        </code>
+        <p> REBOOT</p>
+        <code>
+          <pre>[admin@MikroTik] > /system reboot </pre>
+        </code>
+        <p>CHECK IPv6 SUDAH AKTIF</p>
+        <code>
+          <pre>[admin@MikroTik] > /ipv6 address print 
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local 
+ #    ADDRESS                                     FROM-POOL INTERFACE      ADVERTISE
+ 0 DL fe80::a00:27ff:fe8f:e163/64                           ether4         no       
+ 1 DL fe80::a00:27ff:fe52:df6f/64                           ether1         no </pre>
+        </code>
+        <p>ROUTER 2</p>
+        <code>
+          <pre># LAN Bridge
+/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+add bridge=bridge1 interface=ether4
+add bridge=bridge1 interface=ether5
+add bridge=bridge1 interface=ether6
+add bridge=bridge1 interface=ether7
+add bridge=bridge1 interface=ether8</pre>
+        </code>
+        <p>CHECK IPv4</p>
+        <code>
+          <pre>
+[admin@MikroTik] /interface bridge port> /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                   
+ 0 D 192.168.100.199/24 192.168.100.0   ether1
+          </pre>
+        </code>
+        <p>DISABLE RA di SEMUA INTERFACE</p>
+        <code>
+          <pre>
+[admin@MikroTik] /ipv6 nd set [ find default=yes ] disabled=yes</pre>
+        </code>
+        <p>CHECK LIHAT DISABLE</p>
+        <code>
+          <pre>
+[admin@MikroTik] /interface bridge port> /ipv6 nd print 
+Flags: X - disabled, I - invalid, * - default 
+ 0 X* interface=all ra-interval=3m20s-10m ra-delay=3s mtu=unspecified 
+      reachable-time=unspecified retransmit-interval=unspecified ra-lifetime=30m 
+      hop-limit=unspecified advertise-mac-address=yes advertise-dns=yes 
+      managed-address-configuration=no other-configuration=no</pre>
+        </code>
+          <p>WAN IPv6 automatics</p>
+          <code>
+            <pre>/ipv6 dhcp-client
+add add-default-route=yes interface=ether1 request=prefix pool-name=IPv6-pool
+</pre>
+          </code>
+          <p>ROUTER 1</p>
+          <code>
+            <pre>Disable RA di semua interface
+DI MIKROTIK1 TAMBAHKAN INI
+/ipv6 nd set [ find default=yes ] disabled=yes
+ </pre>
+          </code>
+          <p>WAN IPv6 automatics</p>
+          <code>
+            <pre>/ipv6 dhcp-client
+add add-default-route=yes interface=ether1 request=prefix pool-name=IPv6-pool
+ </pre>
+          </code>
+          <p>LAN setup</p>
+          <code>
+            <pre>/ipv6 address add address=2002:1234:5678::1/64 interface=bridge1 advertise=yes
+/ipv6 pool add name=IPv6-for-client prefix-length=56 prefix=2002:1234:5678::/48
+/ipv6 dhcp-server add name=server1 interface=bridge1 address-pool=IPv6-for-client
+/ipv6 nd prefix add prefix=::/64 interface=bridge1 on-link=yes autonomous=no
+/ipv6 nd add interface=bridge1 managed-address-configuration=yes other-configuration=yes advertise-dns=yes ra-interval=20s-60s
+</pre>
+          </code>
+          <p>CHECK DI MIKROTIK1 AAPAKH SUDAH AKTIF?</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ipv6 dhcp-server print 
+Flags: D - dynamic, X - disabled, I - invalid 
+ #    NAME                INTERFACE                ADDRESS-POOL                PREFERENCE LEASE-TIME
+ 0    server1             bridge1                  IPv6-for-client                    255 3d        
+ </pre>
+          </code>
+          <p>AKTIF ra-interval nya</p>
+          <p>DI ROUTER 1 SUDAH BERESS TINGGAL DI ROUTER 2</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ipv6 nd print 
+Flags: X - disabled, I - invalid, * - default 
+ 0 X* interface=all ra-interval=3m20s-10m ra-delay=3s mtu=unspecified reachable-time=unspecified 
+      retransmit-interval=unspecified ra-lifetime=30m hop-limit=unspecified 
+      advertise-mac-address=yes advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no 
+
+ 1    interface=bridge1 ra-interval=20s-1m ra-delay=3s mtu=unspecified reachable-time=unspecified 
+      retransmit-interval=unspecified ra-lifetime=30m hop-limit=unspecified 
+      advertise-mac-address=yes advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no 
+</pre>
+          </code>
+          <p>DI ROUTER 2</p>
+          <p>Tambahkan Routing Statik ke Mikrotik2</p>
+          <code>
+            <pre>/ipv6 route add dst-address=2002:1234:5678:2::/64 gateway=2002:1234:5678::2
+</pre>
+          </code>
+          <p>Disable RA di semua interface</p>
+          <code>
+            <pre>/ipv6 nd set [ find default=yes ] disabled=yes
+</pre>
+          </code>
+          <p>WAN IPv6 automatics</p>
+          <code>
+            <pre>/ipv6 dhcp-client
+add add-default-route=yes interface=ether1 request=prefix pool-name=IPv6-pool
+ </pre>
+          </code>
+          <p>WAN IPv6 static</p>
+          <code>
+            <pre>/ipv6 address add address=2002:1234:5678::2/64 interface=ether1 advertise=yes
+</pre>
+          </code>
+          <p>LAN Setup</p>
+          <code>
+            <pre>
+/ipv6 address add address=2002:1234:5678:2::1/64 interface=bridge1 advertise=yes 
+</pre>
+          </code>
+          <p>ND</p>
+          <code>
+            <pre>/ipv6 nd add interface=bridge1 ra-interval=20s-60s
+</pre>
+          </code>
+          <p>Check</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ipv6 address print 
+Flags: X - disabled, I - invalid, D - dynamic, G - global, L - link-local 
+ #    ADDRESS                                     FROM-POOL INTERFACE      ADVERTISE
+ 0 DL fe80::a00:27ff:fe52:df6f/64                           ether1         no       
+ 1 DL fe80::a00:27ff:fe21:6b0f/64                           bridge1        no       
+ 2  G 2002:1234:5678::2/64                                  ether1         yes      
+ 3  G 2002:1234:5678:2::1/64                                bridge1        yes
+</pre>
+          </code>
+          <p>COBA PING KE ROUTER 1</p>
+          <p>PASTIKAN NYAMBUNG</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ping 2002:1234:5678::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS                
+    0 2002:1234:5678::1                          56  64 0ms   echo reply            
+    1 2002:1234:5678::1                          56  64 0ms   echo reply            
+    sent=2 received=2 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=0ms 
+ </pre>
+          </code>
+          <p>CHECK DI KALI LINUX, DAPET IP TIDAK ?</p>
+          <img src="img-di-kali-linux/Screenshot from 2022-04-13 16-47-45.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>DI ROUTER 1</p>
+          <p>SEKARANG ROUTING STATIC</p>
+          <p>IPv6: Mikrotik: Static Routing Sedehana</p>
+          <p>JANGAN LUPA GANTI IPv6 NYA</p>
+          <code>
+            <pre>/ipv6 route add dst-address=2002:1234:5678:2::/64 gateway=2002:1234:5678::2
+</pre>
+          </code>
+          <p>CHECK, BERHASIL DI TAMBAHKAN TABEL ROUTING TAMBAHAN NYA</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ipv6 route print 
+Flags: X - disabled, A - active, D - dynamic, C - connect, S - static, r - rip, o - ospf, b - bgp, 
+U - unreachable 
+ #      DST-ADDRESS              GATEWAY                  DISTANCE
+ 0 ADS  2002:1234:5678::/56      fe80::a00:27ff:fe52:d...        1
+ 1 ADC  2002:1234:5678::/64      bridge1                         0
+ 2   S  2002:1234:5678:2::/64    2002:1234:5678::2               1
+ </pre>
+          </code>
+          <p>COBA PING KE ROUTER 2</p>
+          <code>
+            <pre>[admin@MikroTik] > /ping 2002:1234:5678::2
+  SEQ HOST                                     SIZE TTL TIME  STATUS                                
+    0 2002:1234:5678::2                          56  64 1ms   echo reply                            
+    sent=1 received=1 packet-loss=0% min-rtt=1ms avg-rtt=1ms max-rtt=1ms 
+ </pre>
+          </code>
+          <p>BISA PING KE LAN NYA ROUTER 2</p>
+          <code>
+            <pre>[admin@MikroTik] > /ping 2002:1234:5678:2::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS                                
+    0 2002:1234:5678:2::1                        56  64 1ms   echo reply                            
+    1 2002:1234:5678:2::1                        56  64 0ms   echo reply                            
+    2 2002:1234:5678:2::1                        56  64 0ms   echo reply                            
+    sent=3 received=3 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms 
+ </pre>
+          </code>
+          <p>DI ROUTER 1 COBA PING KALI LINUX</p>
+          <code>
+            <pre>[admin@MikroTik] > /ping 2002:1234:5678:2:a235:6c95:8fb:167c
+  SEQ HOST                                     SIZE TTL TIME  STATUS                           
+    0 2002:1234:5678:2:a235:6c95:8fb:167c        56  63 2ms   echo reply                       
+    1 2002:1234:5678:2:a235:6c95:8fb:167c        56  63 1ms   echo reply                       
+    sent=2 received=2 packet-loss=0% min-rtt=1ms avg-rtt=1ms max-rtt=2ms
+ </pre>
+          </code>
+          <img src="img-routing/Screenshot from 2022-04-13 22-13-31.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>COBA SEKARANG DI KALI LINUX PING KE ROUTER 2</p>
+          <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-16-09.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>COBA SEKARANG DI KALI LINUX PING KE ROUTER 1</p>
+          <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-17-23.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>COBA SEKARANG DI KALI LINUX PING KE SERVER</p>
+          <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-23-44.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>COBA BROWSER PAKE IPv6 NYA SERVER</p>
+          <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-25-56.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+          <p>JADI IPv4 NYA KALI LINUX BELUM DAPE, KARENA ROUTER 2 NYA BELUM DI CONFIGURE
+SEKARANG CONFIGURASI IPv4 NYA DI ROUTER 2 NYA BIAR KALI LINUX NYA DAPET IPv4</p>
+          <p> DI ROUTER 2</p>
+          <p>INI IPv4 WAN</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                   
+ 0 D 192.168.100.199/24 192.168.100.0   ether1 
+</pre>
+          </code>
+          <p>TAMBAHKAN IPv4</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ip address add interface=bridge1 address=172.16.100.1/24
+</pre>
+          </code>
+          <p>CHECK, SUDAH ADA</p>
+          <p>PERHATIKAN DI IPv4 192.168.100.199 ADA D NYA ITU ARTINYA DYNAMIC DAPET NYA OTOMATIF DARI PROVIDER DARI MIKROTIK 1</p>
+          <code>
+            <pre>[admin@MikroTik] /ipv6 dhcp-client> /ip address print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ #   ADDRESS            NETWORK         INTERFACE                                   
+ 0 D 192.168.100.199/24 192.168.100.0   ether1                                      
+ 1   172.16.100.1/24    172.16.100.0    bridge1
+ </pre>
+          </code>
+          <p>MASIH DI ROUTER 2</p>
+          <code>
+            <pre>/ip route add gateway=bridge1
+/ip dns set servers=8.8.8.8
+/ip dns set allow-remote-request=yes 
+/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
+/ip firewall nat print
+ </pre>
+          </code>
+          <p>CHECK, SUDAH AKTIF NAT NYA</p>
+          <code>
+            <pre>[admin@MikroTik] > /ip firewall nat print 
+Flags: X - disabled, I - invalid, D - dynamic 
+ 0    chain=srcnat action=masquerade out-interface=ether1</pre>
+          </code>
+          <p>Setup DHCP Server dapat menggunakan</p>
+          <code>
+            <pre>[admin@MikroTik] > /ip dhcp-server setup 
+Select interface to run DHCP server on 
+
+dhcp server interface: bridge1
+Select network for DHCP addresses 
+
+dhcp address space: 172.16.100.0/24
+Select gateway for given network 
+
+gateway for dhcp network: 172.16.100.1
+Select pool of ip addresses given out by DHCP server 
+
+addresses to give out: 172.16.100.100-172.16.100.200
+Select DNS servers 
+
+dns servers: 192.168.100.1,192.168.122.1
+Select lease time 
+
+lease time: 10m
+</pre>
+          </code>
+          <p>SEKARANG CHECK DI KALI LINUX DAPET IPv4 NGGA?</p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-48-07.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG BROWSER KE IPv4 SERVER PASTIKAN NYAMBUNG </p>
+        <img src="img-di-kali-linux/Screenshot from 2022-04-13 22-49-15.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p> DISINI MASIH STATIC DI MIKROTIK 2 NYA KITA UJI COBA BIAR BISA AUTOMATIS DAPET IP NYA
+        <p>SEKARANG STOP SEMUA DULU DI GNS3 NYA</p>
+        <img src="img-routing/Screenshot from 2022-04-13 22-52-25.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-routing/Screenshot from 2022-04-13 22-57-20.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-routing/Screenshot from 2022-04-13 22-59-17.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+
+     </section>
 
       <section class="main-section" id="Advanced_Routing_OSPF_BGP_With_Mikrotik">
         <header>Advanced Routing OSPF BGP Mikrotik</header>
@@ -488,6 +1120,7 @@ show bgp ipv4 unicast neighbors
 show bgp ipv4 unicast summary</pre>
       </code>
       </section>
-    </main>
+
+      </main>
   </body>
 </html>
