@@ -12,6 +12,7 @@
     <nav id="navbar">
       <header>My Documents Routing Networking</header>
       <a href="#Network_Security" class="nav-link">Network Security</a>
+      <a href="#IPv6_Mikrotik_OSPF_Sederhana" class="nav-link">IPv6 Mikrotik OSPF Sederhana</a>
       <a href="#IPv6_Routing_Sederhana_Dengan_Mikrotik" class="nav-link">IPv6 Routing Sederhana Dengan Mikrotik</a>
       <a href="#Advanced_Routing_OSPF_BGP_With_Mikrotik" class="nav-link">Advanced Routing OSPF-BGP With Mikrotik</a>
       <a href="#Advanced_Routing_OSPF_BGP_With_Cisco" class="nav-link">Advanced Routing OSPF-BGP With Cisco</a>
@@ -40,6 +41,382 @@
           Data between the two points is encrypted and the user would need to authenticate to allow communication between their device and the network. 
           Forcepoint's Secure Enterprise SD-WAN allows organizations to quickly create VPNs using drag-and-drop and to protect all locations with our Next Generation Firewall solution.</p>
       </section>
+
+      <section class="main-section" id="IPv6_Mikrotik_OSPF_Sederhana">
+        <header>IPv6 Mikrotik OSPF Sederhana</header>
+        <header>TOPOLOGI</header>
+          <p>SAMBUNGKAN SEPERTI DI BAWAH</p>
+        <code>
+          <pre>R1
+
+e0 -- R3: e0
+e1 -- R2: e0
+e2 -- LAN: 192.168.1.1/24 < INI PC1 SAMBUNGKAN DARI MIKROTIK 1 KE PC
+</pre>
+        </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/1.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>TAMBAHKAN PC1</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/2.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/3.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/4.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <code>
+          <pre>R2
+
+e0 -- R1: e1
+e1 -- R3: e1
+e2 -- LAN 192.168.2.1/16 < INI SERVER SAMBUNGKAN DARI MIKROTIK 2 KE SERVER 
+</pre>
+        </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/5.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <code>
+          <pre>R3
+
+e0 -- R1: e0
+e1 -- R2: e1
+e2 -- LAN 192.168.3.1/24 < INI KALI LINUX SAMBUNGKAN DARI MIKROTIK 3 KE KALI LINUX
+</pre>
+        </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/6.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG NYALAKAN SEBAIK NYA NYALAKAN DULU MIKROTIK NYA</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/7.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <code>
+          <p>SEKARANG MASUK CONSOLE MIKROTIK NYA</p>
+          <p>PASTIKAN SEMUA MIKROTIK DI RESET</p>
+          <pre>
+[admin@MikroTik] > /system reset-configuration 
+[admin@MikroTik] > /system reset-configuration 
+[admin@MikroTik] > /system reset-configuration </pre>
+        </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/8.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/9.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>PASTIKAN IPv6 NYA SUDAH AKTIF DI SEMUA ROUTER CHECK 1 PERSATU DI ROUTER NYA</p>
+        <p>KARENA SEMUA ROUTER BELUM AKTIF IPv6 NYA</p>
+        <p>AKTIFKAN DULU IPv6 NYA</p>
+        <p>KELIHATAN IPv6 NYA X ARTI NYA BELUM AKTIF</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                                            
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5
+</pre>
+        </code>
+        <p>CARA AKTIFKAN ipv6</p>
+        <p>PERHATIKAN DI ATAS NOMOR 3 X IPv6 NYA</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package enable numbers=3</pre>
+        </code>
+        <p>Check Lagi</p>
+        <code>
+          <pre>[admin@MikroTik] > /system package print 
+Flags: X - disabled 
+ #   NAME                    VERSION                    SCHEDULED              
+ 0   dude                    6.49.5                                            
+ 1   routeros-x86            6.49.5                                            
+ 2   system                  6.49.5                                            
+ 3 X ipv6                    6.49.5                     scheduled for enable   
+ 4   ups                     6.49.5                                            
+ 5   wireless                6.49.5                                            
+ 6   hotspot                 6.49.5                                            
+ 7   mpls                    6.49.5                                            
+ 8   routing                 6.49.5                                            
+ 9   ppp                     6.49.5                                            
+10   dhcp                    6.49.5                                            
+11   security                6.49.5                                            
+12   advanced-tools          6.49.5    
+</pre>
+        </code>
+        <p>scheduled for enable BERARTI MINTA DI REBOOT DULU MIKROTIK NYA</p>
+        <code>
+          <pre>[admin@MikroTik] > /system reboot </pre>
+        </code>
+        <p>Konfigurasi</p>
+        <p>Jika di perlukan cek nomor interface</p>
+        <code>
+          <pre>/interface print
+</pre>
+        </code>
+        <p>Router1:</p>
+        <code>
+          <pre> 
+/ip address add address=10.10.1.1/30 interface=ether1
+/ip address add address=10.10.1.5/30 interface=ether2
+/ip address add address=192.168.1.1/24 interface=ether3
+/ipv6 address add address=2001:10:10:1::1/64 interface=ether1
+/ipv6 address add address=2001:10:10:5::1/64 interface=ether2
+/ipv6 address add address=2001:192:168:1::1/64 interface=ether3
+</pre>
+        </code>
+        <p>Router2:</p>
+        <code>
+          <pre>
+/ip address add address=10.10.1.6/30 interface=ether1
+/ip address add address=10.10.1.9/30 interface=ether2
+/ip address add address=192.168.2.1/24 interface=ether3
+/ipv6 address add address=2001:10:10:5::2/64 interface=ether1
+/ipv6 address add address=2001:10:10:9::1/64 interface=ether2
+/ipv6 address add address=2001:192:168:2::1/64 interface=ether3
+          </pre>
+        </code>
+        <p>Router3:</p>
+        <code>
+          <pre>
+/ip address add address=10.10.1.2/30 interface=ether1
+/ip address add address=10.10.1.10/30 interface=ether2
+/ip address add address=192.168.3.1/24 interface=ether3
+/ipv6 address add address=2001:10:10:1::2/64 interface=ether1
+/ipv6 address add address=2001:10:10:9::2/64 interface=ether2
+/ipv6 address add address=2001:192:168:3::1/64 interface=ether3
+</pre>
+        </code>
+        <p>Ada tiga (3) elemen dasar konfigurasi OSPF:</p>
+        <p>Enable OSPF instance</p>
+        <p>OSPF area configuration</p>
+        <p>OSPF network configuration</p>
+
+        <p>Catatan: Ingat bahwa backbone area-id adalah 0.0.0.0.</p>
+        <code>
+          <pre>R1
+
+/routing ospf interface add interface=ether1
+/routing ospf interface add interface=ether2
+/routing ospf interface add interface=ether3
+/routing ospf network add network=10.10.1.0/24 area=backbone
+/routing ospf network add network=192.168.1.0/24 area=backbone
+/routing ospf instance set default router-id=10.10.1.1 redistribute-connected=as-type-1
+/routing ospf-v3 interface add interface=ether1 area=backbone
+/routing ospf-v3 interface add interface=ether2 area=backbone
+/routing ospf-v3 interface add interface=ether3 area=backbone
+/routing ospf-v3 instance set default redistribute-static=as-type-1 redistribute-connected=as-type-1 
+</pre>
+        </code>
+        <code>
+          <pre>R2
+
+/routing ospf interface add interface=ether1
+/routing ospf interface add interface=ether2
+/routing ospf interface add interface=ether3
+/routing ospf network add network=10.10.1.0/24 area=backbone
+/routing ospf network add network=192.168.2.0/24 area=backbone
+/routing ospf instance set default router-id=10.10.1.5 redistribute-connected=as-type-1
+/routing ospf-v3 interface add interface=ether1 area=backbone
+/routing ospf-v3 interface add interface=ether2 area=backbone
+/routing ospf-v3 interface add interface=ether3 area=backbone
+/routing ospf-v3 instance set default redistribute-static=as-type-1 redistribute-connected=as-type-1 
+</pre>
+        </code>
+        <code>
+          <pre>R3
+
+/routing ospf interface add interface=ether1
+/routing ospf interface add interface=ether2
+/routing ospf interface add interface=ether3
+/routing ospf network add network=10.10.1.0/24 area=backbone
+/routing ospf network add network=192.168.3.0/24 area=backbone
+/routing ospf instance set default router-id=10.10.1.9 redistribute-connected=as-type-1
+/routing ospf-v3 interface add interface=ether1 area=backbone
+/routing ospf-v3 interface add interface=ether2 area=backbone
+/routing ospf-v3 interface add interface=ether3 area=backbone
+/routing ospf-v3 instance set default redistribute-static=as-type-1 redistribute-connected=as-type-1
+</pre>
+        </code>
+        <p>Verify</p>
+        <p>Cek di R1, R2, R3</p>
+        <code>
+          <pre>/routing ospf neighbor print 
+/routing ospf route print
+
+/routing ospf-v3 neighbor print 
+/routing ospf-v3 route print
+</pre>
+        </code>
+        <p>COBA PING DARI ROUTER 3 KE ROUTER 1</p>
+        <code>
+          <pre>[admin@MikroTik] > /ping 2001:192:168:3::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:192:168:3::1                          56  64 0ms   echo reply       
+    1 2001:192:168:3::1                          56  64 0ms   echo reply       
+    2 2001:192:168:3::1                          56  64 0ms   echo reply       
+    3 2001:192:168:3::1                          56  64 0ms   echo reply       
+    sent=4 received=4 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=0ms 
+</pre>
+        </code>
+        <p>COBA PING DARI ROUTER 3 KE ROUTER 2</p>
+        <code>
+          <pre>
+[admin@MikroTik] > ping 2001:192:168:2::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:192:168:2::1                          56  64 1ms   echo reply       
+    1 2001:192:168:2::1                          56  64 1ms   echo reply       
+    2 2001:192:168:2::1                          56  64 0ms   echo reply       
+    3 2001:192:168:2::1                          56  64 0ms   echo reply       
+    sent=4 received=4 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms 
+</pre>
+        </code>
+        <p>COBA PING DARI ROUTER 1 KE ROUTER 3</p>
+        <code>
+          <pre>[admin@MikroTik] > /ping 2001:10:10:1::2
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:10:10:1::2                            56  64 0ms   echo reply       
+    1 2001:10:10:1::2                            56  64 1ms   echo reply       
+    2 2001:10:10:1::2                            56  64 0ms   echo reply       
+    3 2001:10:10:1::2                            56  64 0ms   echo reply       
+    sent=4 received=4 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms 
+ </pre>
+        </code>
+   <p>LIHAT TABEL ROUTING DI ROUTER 1</p>
+   <code>
+     <pre>[admin@MikroTik] > /ipv6 route print 
+Flags: X - disabled, A - active, D - dynamic, 
+C - connect, S - static, r - rip, o - ospf, b - bgp, U - unreachable 
+ #      DST-ADDRESS              GATEWAY                  DISTANCE
+ 0 ADC  2001:10:10:1::/64        ether1                          0
+ 1 ADC  2001:10:10:5::/64        ether2                          0
+ 2 ADo  2001:10:10:9::/64        fe80::a00:27ff:fe52:d...      110
+                                 fe80::a00:27ff:fe98:2...
+ 3 ADC  2001:192:168:1::/64      ether3                          0
+ 4 ADo  2001:192:168:2::/64      fe80::a00:27ff:fe52:d...      110
+ 5 ADo  2001:192:168:3::/64      fe80::a00:27ff:fe98:2...      110
+</pre>
+       </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/10.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+       <p>COBA SADAP PAKE WIRESRAK</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/11.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/12.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>CHECK IPv6 DI SEMUA ROUTER</p>
+        <code>
+          <pre>[admin@MikroTik] > /ip address print 
+[admin@MikroTik] > /ip address print 
+[admin@MikroTik] > /ip address print 
+</pre>
+        </code>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/13.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>PING DARI ROUTER 1 KE ROUTER 2 DAN 3</p>
+        <p>INI DI ROUTER 1</p>
+        <code>
+          <pre>[admin@MikroTik] > /ping 2001:10:10:9::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:10:10:9::1                            56  64 2ms   echo reply       
+    1 2001:10:10:9::1                            56  64 1ms   echo reply       
+    2 2001:10:10:9::1                            56  64 1ms   echo reply       
+    sent=3 received=3 packet-loss=0% min-rtt=1ms avg-rtt=1ms max-rtt=2ms 
+
+[admin@MikroTik] > /ping 2001:192:168:2::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:192:168:2::1                          56  64 1ms   echo reply       
+    1 2001:192:168:2::1                          56  64 1ms   echo reply       
+    2 2001:192:168:2::1                          56  64 0ms   echo reply       
+    sent=3 received=3 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms 
+
+[admin@MikroTik] > /ping 2001:10:10:9::2
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:10:10:9::2                            56  64 1ms   echo reply       
+    1 2001:10:10:9::2                            56  64 0ms   echo reply       
+    sent=2 received=2 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms 
+
+[admin@MikroTik] > /ping 2001:192:168:3::1
+  SEQ HOST                                     SIZE TTL TIME  STATUS           
+    0 2001:192:168:3::1                          56  64 1ms   echo reply       
+    1 2001:192:168:3::1                          56  64 0ms   echo reply       
+    sent=2 received=2 packet-loss=0% min-rtt=0ms avg-rtt=0ms max-rtt=1ms
+</pre>
+        </code>
+        <p>Pastikan Nyambung</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/14.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>Hidupan Server</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/15.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/16.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>DI SERVER MASIH BELUM DAPET IPv6 NYA</p>
+        <p>SETUP nd NYA DULU DI SEMUA MIKROTIK NYA</p>
+        <p>DI SEMUA ROUTER</p>
+        <p>LAN Bridge</p>
+        <code>
+          <pre>/interface bridge
+add name=bridge1
+/interface bridge port
+add bridge=bridge1 interface=ether2
+add bridge=bridge1 interface=ether3
+add bridge=bridge1 interface=ether4
+add bridge=bridge1 interface=ether5
+add bridge=bridge1 interface=ether6
+add bridge=bridge1 interface=ether7
+add bridge=bridge1 interface=ether8
+</pre>
+        </code>
+        <p>CHECK, LIHAT PALING BAWAH NOMOR 8 bridge1 SUDAH NYALA</p>
+        <code>
+          <pre>[admin@MikroTik] > /interface print 
+Flags: D - dynamic, X - disabled, R - running, S - slave 
+ #     NAME                                TYPE       ACTUAL-MTU L2MTU  MAX-L2MTU
+ 0  R  ether1                              ether            1500
+ 1  RS ether2                              ether            1500
+ 2  RS ether3                              ether            1500
+ 3  RS ether4                              ether            1500
+ 4  RS ether5                              ether            1500
+ 5  RS ether6                              ether            1500
+ 6  RS ether7                              ether            1500
+ 7  RS ether8                              ether            1500
+ 8  R  bridge1                             bridge           1500 65535
+</pre>
+        </code>
+        <p>Disable RA di semua interface</p>
+        <code>
+          <pre>[admin@MikroTik] > /ipv6 nd set [ find default=yes ] disabled=yes</pre>
+        </code>
+        <p>MENGAKTIFKAN nd DI INTERFACE BUAT bridge1 DOANG</p>
+        <code>
+          <pre>[admin@MikroTik] > /ipv6 nd add interface=bridge1 ra-interval=20s-60s
+</pre>
+        </code>
+        <p>CHECK SUDAH ADA DUA nd nya</p>
+        <code>
+          <pre>[admin@MikroTik] /interface bridge port> /ipv6 nd print
+Flags: X - disabled, I - invalid, * - default 
+ 0  * interface=all ra-interval=3m20s-10m ra-delay=3s mtu=unspecified 
+      reachable-time=unspecified retransmit-interval=unspecified 
+      ra-lifetime=30m hop-limit=unspecified advertise-mac-address=yes 
+      advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no 
+
+ 1    interface=bridge1 ra-interval=20s-1m ra-delay=3s mtu=unspecified 
+      reachable-time=unspecified retransmit-interval=unspecified 
+      ra-lifetime=30m hop-limit=unspecified advertise-mac-address=yes 
+      advertise-dns=yes managed-address-configuration=no 
+      other-configuration=no
+</pre>
+        </code>
+        <p>CHECK LAGI DI SERVER NYA APAKAH UDAH DAPET IPv6 NYA APA BELUM?</p>
+        <p>SERVER SUDAH DAPET IPv6</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/18.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>COBA PING DARI SERVER KE ROUTER 2 PASTIKAN NYAMBUNG</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/19.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>COBA PING DARI SERVER KE ROUTER 3 PASTIKAN NYAMBUNG</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/20.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG CHECK DI KALI LINUX DAPET IP NGGA?</p>
+        <p>COBA PING DARI KALI LINUX KE ROUTER 3 PASTIKAN NYAMBUNG</p>
+        <p>COBA PING DARI KALI LINUX KE SERVER PASTIKAN NYAMBUNG</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/21.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>COBA DARI KALI LINUX BROWSER KE SERVER PASTIKAN NYAMBUNG</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/22.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SEKARANG RESET SEMUA ROUTER NYA</p>
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/23.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/24.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/25.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <img src="img-IPv6-Mikrotik-OSPF-Sederhana/Screenshot from 2022-04-14 13-44-40.png" alt="login" width="1000" class="rounded-circle img-thumbnail" />
+        <p>SELESAI KALO SUDAH NYAMBUNG DI PING SATU SAMA LAIN</p>
+        <p>SEKARANG GANTI YANG AGA RUMIT LAGI ROUTING OSPF</p>
+       </section>
 
       <section class="main-section" id="IPv6_Routing_Sederhana_Dengan_Mikrotik">
       <header>IPv6 Routing Sederhana Dengan Mikrotik</header>
